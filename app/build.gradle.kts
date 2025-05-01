@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    kotlin("plugin.serialization") version "2.0.21"
 }
-
 android {
     namespace = "com.carbondev.carboncheck"
     compileSdk = 35
@@ -36,11 +37,16 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    secrets {
+        propertiesFileName = "secrets.properties"
+        defaultPropertiesFileName = "secrets.defaults.properties"
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,4 +62,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Supabase dependencies
+    implementation(platform(libs.bom))
+    implementation(libs.postgrest.kt)
+    implementation(libs.auth.kt)
+    implementation(libs.realtime.kt)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.ktor.client.android)
 }
+
