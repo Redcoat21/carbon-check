@@ -16,7 +16,29 @@ data class NetworkProfile(
     @Json(name = "deleted_at") @Contextual val deletedAt: Date?,
     @Json(name = "avatar_url") val avatarUrl: String
 ) : RemoteMappable<Profile> {
+    companion object {
+        const val TABLE_NAME = "profiles"
+    }
 
+    object Columns {
+        const val ID = "id"
+        const val FIRST_NAME = "first_name"
+        const val LAST_NAME = "last_name"
+        const val CREATED_AT = "created_at"
+        const val UPDATED_AT = "updated_at"
+        const val DELETED_AT = "deleted_at"
+        const val AVATAR_URL = "avatar_url"
+
+        val ALL = listOf(
+            ID,
+            FIRST_NAME,
+            LAST_NAME,
+            CREATED_AT,
+            UPDATED_AT,
+            DELETED_AT,
+            AVATAR_URL
+        )
+    }
     override fun toDomainModel(): Profile {
         return Profile(
             id = id,
