@@ -1,6 +1,5 @@
 package com.carbondev.carboncheck.domain.usecase
 
-import com.carbondev.carboncheck.data.remote.repository.UserRepositoryRemoteImplementation
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.User
