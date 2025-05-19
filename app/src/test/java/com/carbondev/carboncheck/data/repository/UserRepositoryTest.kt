@@ -1,8 +1,8 @@
 package com.carbondev.carboncheck.data.repository
 
-import com.carbondev.carboncheck.data.remote.model.NetworkProfile
-import com.carbondev.carboncheck.data.remote.repository.ProfileRepositoryRemoteImplementation
-import com.carbondev.carboncheck.data.remote.supabase.ProfileRemoteDataSource
+import com.carbondev.carboncheck.data.remote.model.NetworkUser
+import com.carbondev.carboncheck.data.remote.repository.UserRepositoryRemoteImplementation
+import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.error.ErrorHandler
 import io.mockk.coEvery
@@ -11,22 +11,22 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-class ProfileRepositoryTest {
-    private lateinit var mockRemoteDataSource: ProfileRemoteDataSource
-    private lateinit var profileRepository: ProfileRepositoryRemoteImplementation
+class UserRepositoryTest {
+    private lateinit var mockRemoteDataSource: UserRemoteDataSource
+    private lateinit var profileRepository: UserRepositoryRemoteImplementation
     private lateinit var mockErrorHandler: ErrorHandler
 
     @Before
     fun setUp() {
         mockRemoteDataSource = mockk()
         mockErrorHandler = mockk()
-        profileRepository = ProfileRepositoryRemoteImplementation(mockRemoteDataSource, mockErrorHandler)
+        profileRepository = UserRepositoryRemoteImplementation(mockRemoteDataSource, mockErrorHandler)
     }
 
     @Test
-    fun `getProfile should return a valid profile`(): Unit = runTest {
+    fun `getUser should return a valid profile`(): Unit = runTest {
         val expectedProfileId = "12345"
-        val mockNetworkProfile = NetworkProfile(
+        val mockNetworkUser = NetworkUser(
             id = expectedProfileId,
             firstName = "John",
             lastName = "Doe",
@@ -34,16 +34,17 @@ class ProfileRepositoryTest {
             updatedAt = mockk(),
             deletedAt = null,
             avatarUrl = "https://example.com/avatar.jpg",
+            email = "johndoe@example.com",
         )
 
-        val expectedProfile = mockNetworkProfile.toDomainModel()
+        val expectedProfile = mockNetworkUser.toDomainModel()
 
         coEvery {
             mockRemoteDataSource.getProfile(expectedProfileId)
-        } returns mockNetworkProfile
+        } returns mockNetworkUser
 
         // Act
-        val result = profileRepository.getProfile(expectedProfileId)
+        val result = profileRepository.getUser(expectedProfileId)
 
         // Assert
         assert(result is Result.Success)
