@@ -6,7 +6,9 @@ import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.error.ErrorHandler
+import com.carbondev.carboncheck.domain.model.User
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -27,21 +29,14 @@ class UserRepositoryTest {
     @Test
     fun `getUser should return a valid profile`(): Unit = runTest {
         val expectedProfileId = "12345"
-        val mockNetworkUser = NetworkUser(
-            id = expectedProfileId,
-            firstName = "John",
-            lastName = "Doe",
-            createdAt = mockk(),
-            updatedAt = mockk(),
-            deletedAt = null,
-            avatarUrl = "https://example.com/avatar.jpg",
-            email = "johndoe@example.com",
-        )
+        val mockNetworkUser = mockk<NetworkUser>()
 
-        val expectedProfile = mockNetworkUser.toDomainModel()
+        val expectedUser = mockk<User>()
+
+        every { mockNetworkUser.toDomainModel() } returns expectedUser
 
         coEvery {
-            mockRemoteDataSource.getProfile(expectedProfileId)
+            mockRemoteDataSource.getUser(expectedProfileId)
         } returns mockNetworkUser
 
         // Act
@@ -49,15 +44,15 @@ class UserRepositoryTest {
 
         // Assert
         assert(result is Result.Success)
-        assert((result as Result.Success).data == expectedProfile)
+        assert((result as Result.Success).data == expectedUser)
     }
 
     @Test
-    fun `getUser should return an error when user is not found`(): Unit = runTest {
+    fun `getUser should return a not found error when user is not found`(): Unit = runTest {
         val expectedProfileId = "12345"
 
         coEvery {
-            mockRemoteDataSource.getProfile(expectedProfileId)
+            mockRemoteDataSource.getUser(expectedProfileId)
         } returns null
 
         // Act
