@@ -8,9 +8,6 @@ data class User(
     val lastName: String,
     val avatarUrl: String,
     val email: String,
-    val createdAt: Date,
-    val updatedAt: Date,
-    val deletedAt: Date?
 ) {
     val name: String get() = "$firstName $lastName".trim()
 }

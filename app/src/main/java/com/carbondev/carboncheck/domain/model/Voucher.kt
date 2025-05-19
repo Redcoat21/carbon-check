@@ -7,7 +7,4 @@ data class Voucher(
     val vendor: Vendor,
     val name: String,
     val amount: Int,
-    val createdAt: Date,
-    val updatedAt: Date,
-    val deletedAt: Date?
 )

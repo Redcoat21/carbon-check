@@ -31,7 +31,7 @@ data class NetworkUser(
         const val AVATAR_URL = "avatar_url"
         const val EMAIL = "email"
 
-        val ALL = listOf(
+        val ALL = arrayOf(
             ID,
             FIRST_NAME,
             LAST_NAME,
@@ -48,9 +48,6 @@ data class NetworkUser(
             firstName = firstName,
             lastName = lastName,
             avatarUrl = avatarUrl,
-            createdAt = createdAt,
-            updatedAt = updatedAt,
-            deletedAt = deletedAt,
             email = email
         )
     }

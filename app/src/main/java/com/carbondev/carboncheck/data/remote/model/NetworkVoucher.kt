@@ -22,9 +22,6 @@ data class NetworkVoucher(
             vendor = vendor.toDomainModel(),
             name = name,
             amount = amount,
-            createdAt = createdAt,
-            updatedAt = updatedAt,
-            deletedAt = deletedAt
         )
     }
 }
