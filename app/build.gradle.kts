@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.constraintlayout)
     // Testing dependencies (JUnit, MockK)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
@@ -102,5 +103,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.moshi)
+
+//    implementation(libs.material)
 }
 
