@@ -6,6 +6,7 @@ import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.User
 import com.carbondev.carboncheck.domain.repository.UserRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -22,8 +23,12 @@ class UserRepositoryRemoteImplementation @Inject constructor(
         return try {
             remote.getProfile(id)?.let { user ->
                 Result.Success(user.toDomainModel())
-            } ?: Result.Error(message = "User not found", type = ErrorType.NOT_FOUND_ERROR)
+            } ?: run {
+                Timber.w("User with id $id not found")
+                Result.Error(message = "User not found", type = ErrorType.NOT_FOUND_ERROR)
+            }
         } catch (e: Exception) {
+            Timber.e("Error fetching user $id: ${e.message}")
             Result.Error(type = errorHandler.mapToDomainError(e), exception = e)
         }
     }

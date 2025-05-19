@@ -3,6 +3,7 @@ package com.carbondev.carboncheck.data.repository
 import com.carbondev.carboncheck.data.remote.model.NetworkUser
 import com.carbondev.carboncheck.data.remote.repository.UserRepositoryRemoteImplementation
 import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
+import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.error.ErrorHandler
 import io.mockk.coEvery
@@ -49,6 +50,22 @@ class UserRepositoryTest {
         // Assert
         assert(result is Result.Success)
         assert((result as Result.Success).data == expectedProfile)
+    }
+
+    @Test
+    fun `getUser should return an error when user is not found`(): Unit = runTest {
+        val expectedProfileId = "12345"
+
+        coEvery {
+            mockRemoteDataSource.getProfile(expectedProfileId)
+        } returns null
+
+        // Act
+        val result = profileRepository.getUser(expectedProfileId)
+
+        // Assert
+        assert(result is Result.Error)
+        assert((result as Result.Error).type == ErrorType.NOT_FOUND_ERROR)
     }
 
 }
