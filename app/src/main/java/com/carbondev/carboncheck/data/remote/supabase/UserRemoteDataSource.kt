@@ -13,14 +13,18 @@ import javax.inject.Inject
  * @param client The Supabase client used to make network requests.
  */
 class UserRemoteDataSource @Inject constructor(private val client: SupabaseClient) {
-    suspend fun getProfile(id: String): NetworkUser? {
-        val columns = Columns.list(NetworkUser.Columns.ALL)
+    suspend fun getUser(id: String): NetworkUser? {
+        val columns = Columns.list(NetworkUser.Columns.ALL.toList())
 
         val req = client.from(NetworkUser.TABLE_NAME).select(columns = columns) {
             filter {
-                eq(NetworkUser.Columns.ID, id)
+                and {
+                    eq(NetworkUser.Columns.ID, id)
+                    exact(NetworkUser.Columns.DELETED_AT, null)
+                }
             }
         }
+
         val res = req.decodeSingleOrNull<NetworkUser>()
         return res
     }

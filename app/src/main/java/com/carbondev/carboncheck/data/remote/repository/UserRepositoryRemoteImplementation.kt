@@ -21,7 +21,7 @@ class UserRepositoryRemoteImplementation @Inject constructor(
     UserRepository {
     override suspend fun getUser(id: String): Result<User?> {
         return try {
-            remote.getProfile(id)?.let { user ->
+            remote.getUser(id)?.let { user ->
                 Result.Success(user.toDomainModel())
             } ?: run {
                 Timber.w("User with id $id not found")
