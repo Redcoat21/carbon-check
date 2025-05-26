@@ -7,27 +7,30 @@ import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.error.ErrorHandler
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.Vendor
+import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
 class VendorRepositoryTest {
+    @MockK private lateinit var mockRemoteDataSource: VendorRemoteDataSource
+    @MockK private lateinit var mockErrorHandler: ErrorHandler
     private lateinit var vendorRepository: VendorRepositoryRemoteImplementation
-    private lateinit var mockRemoteDataSource: VendorRemoteDataSource
-    private lateinit var mockErrorHandler: ErrorHandler
 
     @Before
     fun setUp() {
-        mockRemoteDataSource = mockk<VendorRemoteDataSource>()
-        mockErrorHandler = mockk<ErrorHandler>()
+        MockKAnnotations.init(this)
         vendorRepository = VendorRepositoryRemoteImplementation(mockRemoteDataSource, mockErrorHandler)
     }
 
     @Test
-    fun `getVendor should return a valid profile`() = runTest {
+    fun `getVendor should return a valid vendor`() = runTest {
         // Arrange
         val expectedVendorId = "12345"
         val mockNetworkVendor = mockk<NetworkVendor>()
@@ -43,8 +46,8 @@ class VendorRepositoryTest {
         val result = vendorRepository.getVendor(expectedVendorId)
 
         // Assert
-        assert(result is Result.Success)
-        assert((result as Result.Success).data == expectedVendor)
+        assertTrue(result is Result.Success)
+        assertEquals((result as Result.Success).data, expectedVendor)
     }
 
     @Test
@@ -60,7 +63,7 @@ class VendorRepositoryTest {
         val result = vendorRepository.getVendor(expectedVendorId)
 
         // Assert
-        assert(result is Result.Error)
-        assert((result as Result.Error).type == ErrorType.NOT_FOUND_ERROR)
+        assertTrue(result is Result.Error)
+        assertEquals((result as Result.Error).type, ErrorType.NOT_FOUND_ERROR)
     }
 }
