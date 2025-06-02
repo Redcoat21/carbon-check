@@ -13,7 +13,6 @@ data class NetworkUser(
     val email: String,
     @Json(name = "created_at") val createdAt: Date,
     @Json(name = "updated_at") val updatedAt: Date,
-    @Json(name = "deleted_at") val deletedAt: Date?,
     @Json(name = "avatar_url") val avatarUrl: String
 ) : RemoteMappable<User> {
     companion object {
@@ -26,7 +25,6 @@ data class NetworkUser(
         const val LAST_NAME = "last_name"
         const val CREATED_AT = "created_at"
         const val UPDATED_AT = "updated_at"
-        const val DELETED_AT = "deleted_at"
         const val AVATAR_URL = "avatar_url"
         const val EMAIL = "email"
 
@@ -36,7 +34,6 @@ data class NetworkUser(
             LAST_NAME,
             CREATED_AT,
             UPDATED_AT,
-            DELETED_AT,
             AVATAR_URL,
             EMAIL
         )

@@ -20,7 +20,6 @@ class UserRemoteDataSource @Inject constructor(private val client: SupabaseClien
             filter {
                 and {
                     eq(NetworkUser.Columns.ID, id)
-                    exact(NetworkUser.Columns.DELETED_AT, null)
                 }
             }
         }

@@ -4,7 +4,7 @@ import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.User
 import com.carbondev.carboncheck.domain.repository.UserRepository
-import com.carbondev.carboncheck.domain.usecase.profile.GetUserUseCase
+import com.carbondev.carboncheck.domain.usecase.user.GetUserUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals

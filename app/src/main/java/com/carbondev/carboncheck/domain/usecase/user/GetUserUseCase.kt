@@ -1,4 +1,4 @@
-package com.carbondev.carboncheck.domain.usecase.profile
+package com.carbondev.carboncheck.domain.usecase.user
 
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result

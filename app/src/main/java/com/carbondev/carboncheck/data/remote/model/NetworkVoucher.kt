@@ -13,7 +13,6 @@ data class NetworkVoucher(
     val amount: Int,
     @Json(name = "created_at") val createdAt: Date,
     @Json(name = "updated_at") val updatedAt: Date,
-    @Json(name = "deleted_at") val deletedAt: Date?,
 ) : RemoteMappable<Voucher> {
     override fun toDomainModel(): Voucher {
         return Voucher(
