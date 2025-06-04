@@ -19,7 +19,7 @@ class UserRepositoryRemoteImplementation @Inject constructor(
     private val errorHandler: ErrorHandler
 ) :
     UserRepository {
-    override suspend fun getUser(id: String): Result<User?> {
+    override suspend fun getUser(id: String): Result<User> {
         return try {
             remote.getUser(id)?.let { user ->
                 Result.Success(user.toDomainModel())
