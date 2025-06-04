@@ -20,12 +20,13 @@ import org.junit.Test
 
 class UserRepositoryTest {
     @MockK private lateinit var mockRemoteDataSource: UserRemoteDataSource
-    @MockK private lateinit var mockErrorHandler: ErrorHandler
+    private lateinit var mockErrorHandler: ErrorHandler
     private lateinit var userRepository: UserRepositoryRemoteImplementation
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        mockErrorHandler = mockk(relaxed = true)
         userRepository = UserRepositoryRemoteImplementation(mockRemoteDataSource, mockErrorHandler)
     }
 
@@ -66,4 +67,36 @@ class UserRepositoryTest {
         assertTrue(result is Result.Error)
         assertEquals((result as Result.Error).type, ErrorType.NOT_FOUND_ERROR)
     }
+
+    @Test
+    fun `getCurrentUser should return a valid user when current user exists`(): Unit = runTest {
+        // Arrange
+        val mockNetworkUser = mockk<NetworkUser>()
+        val mockUser = mockk<User>()
+        coEvery { mockRemoteDataSource.getCurrentUser() } returns mockNetworkUser
+        every { mockNetworkUser.toDomainModel() } returns mockUser
+
+        // Act
+        val result = userRepository.getCurrentUser()
+
+        // Assert
+        assertTrue(result is Result.Success)
+        assertEquals((result as Result.Success).data, mockUser)
+    }
+
+    @Test
+    fun `getCurrentUser should return an error when current user does not exist`(): Unit = runTest {
+        // Arrange
+        val expectedException = IllegalStateException("User not found")
+        coEvery { mockRemoteDataSource.getCurrentUser() } throws expectedException
+        every { mockErrorHandler.mapToDomainError(expectedException) } returns ErrorType.NOT_FOUND_ERROR
+
+        // Act
+        val result = userRepository.getCurrentUser()
+
+        // Assert
+        assertTrue(result is Result.Error)
+        assertEquals((result as Result.Error).type, ErrorType.NOT_FOUND_ERROR)
+    }
 }
+

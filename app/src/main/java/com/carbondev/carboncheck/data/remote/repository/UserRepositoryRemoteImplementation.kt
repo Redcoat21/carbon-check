@@ -32,4 +32,18 @@ class UserRepositoryRemoteImplementation @Inject constructor(
             Result.Error(type = errorHandler.mapToDomainError(e), exception = e)
         }
     }
+
+    override suspend fun getCurrentUser(): Result<User> {
+        return try {
+            remote.getCurrentUser()?.let { user ->
+                Result.Success(user.toDomainModel())
+            } ?: run {
+                Timber.w("The impossible happened: current user not found")
+                Result.Error(message = "Current user not found", type = ErrorType.NOT_FOUND_ERROR)
+            }
+        } catch (e: Exception) {
+            Timber.e("Error fetching current user: ${e.message}")
+            Result.Error(type = errorHandler.mapToDomainError(e), exception = e)
+        }
+    }
 }

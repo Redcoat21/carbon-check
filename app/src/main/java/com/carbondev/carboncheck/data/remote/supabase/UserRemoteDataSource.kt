@@ -2,6 +2,7 @@ package com.carbondev.carboncheck.data.remote.supabase
 
 import com.carbondev.carboncheck.data.remote.model.NetworkUser
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import javax.inject.Inject
@@ -26,5 +27,13 @@ class UserRemoteDataSource @Inject constructor(private val client: SupabaseClien
 
         val res = req.decodeSingleOrNull<NetworkUser>()
         return res
+    }
+
+    suspend fun getCurrentUser(): NetworkUser? {
+        val currentUserInfo = client.auth.currentUserOrNull()
+        // Well it shouldn't ever return null, but who knows
+        val currentUser =
+            getUser(currentUserInfo?.id ?: throw IllegalStateException("No current user found"))
+        return currentUser
     }
 }

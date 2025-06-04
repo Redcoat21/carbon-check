@@ -8,4 +8,5 @@ import com.carbondev.carboncheck.domain.model.User
  */
 interface UserRepository {
     suspend fun getUser(id: String): Result<User?>
+    suspend fun getCurrentUser(): Result<User>
 }
