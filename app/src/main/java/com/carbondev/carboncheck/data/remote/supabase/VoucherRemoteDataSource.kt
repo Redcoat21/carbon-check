@@ -25,14 +25,14 @@ class VoucherRemoteDataSource @Inject constructor(private val client: SupabaseCl
         return res
     }
 
-    suspend fun getVoucher(id: String): NetworkVoucher? {
+    suspend fun getVoucher(id: String): NetworkVoucher {
         val columns = Columns.list(NetworkVoucher.Columns.ALL)
         val req = client.from(NetworkVoucher.TABLE_NAME).select(columns = columns) {
             filter {
                 eq(NetworkVoucher.Columns.ID, id)
             }
         }
-        val res = req.decodeSingleOrNull<NetworkVoucher>()
+        val res = req.decodeSingle<NetworkVoucher>()
         return res
     }
 }
