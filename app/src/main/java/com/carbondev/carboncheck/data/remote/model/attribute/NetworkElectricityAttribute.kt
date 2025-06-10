@@ -14,7 +14,7 @@ import kotlinx.datetime.Instant
 @JsonClass(generateAdapter = true)
 data class NetworkElectricityAttribute(
     val country: String,
-    val state: String? = null,
+    val state: String,
     @Json(name = "electricity_unit") val electricityUnit: String,
     @Json(name = "electricity_value") val electricityValue: Int,
     @Json(name = "estimated_at") override val estimatedAt: Instant,

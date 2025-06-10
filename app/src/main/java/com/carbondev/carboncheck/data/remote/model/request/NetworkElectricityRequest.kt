@@ -16,7 +16,7 @@ data class NetworkElectricityRequest(
     @Json(name = "electricity_unit") val electricityUnit: String = "mwh",
     @Json(name = "electricity_value") val electricityValue: Int,
     val country: String,
-    val state: String? = null
+    val state: String = ""
 ) : NetworkRequest() {
     override val type: String = "electricity"
 }
