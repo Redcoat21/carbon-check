@@ -1,12 +1,11 @@
-package com.carbondev.carboncheck.domain.error
+package com.carbondev.carboncheck.domain.exception
 
-import com.carbondev.carboncheck.data.error.ErrorHandlerImplementation
 import com.carbondev.carboncheck.domain.common.ErrorType
 import org.junit.Test
 import junit.framework.TestCase.assertEquals
 
 class ErrorHandlerTest {
-    private val errorHandler = ErrorHandlerImplementation()
+    private val errorHandler = ErrorHandler()
 
     @Test
     fun `mapToDomainError should return NETWORK_ERROR for IOException`() {

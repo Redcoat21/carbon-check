@@ -5,7 +5,7 @@ import com.carbondev.carboncheck.data.remote.repository.UserRepositoryRemoteImpl
 import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
-import com.carbondev.carboncheck.domain.error.ErrorHandler
+import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.model.User
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery

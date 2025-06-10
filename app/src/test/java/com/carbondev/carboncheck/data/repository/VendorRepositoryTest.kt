@@ -4,7 +4,7 @@ import com.carbondev.carboncheck.data.remote.model.NetworkVendor
 import com.carbondev.carboncheck.data.remote.repository.VendorRepositoryRemoteImplementation
 import com.carbondev.carboncheck.data.remote.supabase.VendorRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
-import com.carbondev.carboncheck.domain.error.ErrorHandler
+import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.Vendor
 import io.mockk.MockKAnnotations

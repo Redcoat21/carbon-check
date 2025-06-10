@@ -1,0 +1,19 @@
+package com.carbondev.carboncheck.domain.exception
+
+import com.carbondev.carboncheck.domain.common.ErrorType
+import kotlinx.io.IOException
+import javax.inject.Singleton
+
+/**
+ * Interface for handling errors in the domain layer.
+ * It maps exceptions to domain-specific error types.
+ */
+@Singleton
+class ErrorHandler {
+    fun mapToDomainError(exception: Exception): ErrorType {
+        return when (exception) {
+            is IOException -> ErrorType.NETWORK_ERROR
+            else -> ErrorType.UNKNOWN_ERROR
+        }
+    }
+}
