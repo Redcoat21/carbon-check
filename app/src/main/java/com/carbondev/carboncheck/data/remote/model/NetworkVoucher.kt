@@ -3,6 +3,7 @@ package com.carbondev.carboncheck.data.remote.model
 import com.carbondev.carboncheck.domain.model.Voucher
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.datetime.Instant
 import java.util.Date
 
 @JsonClass(generateAdapter = true)
@@ -11,8 +12,8 @@ data class NetworkVoucher(
     val vendor: NetworkVendor,
     val name: String,
     val amount: Int,
-    @Json(name = "created_at") val createdAt: Date,
-    @Json(name = "updated_at") val updatedAt: Date,
+    @Json(name = "created_at") val createdAt: Instant,
+    @Json(name = "updated_at") val updatedAt: Instant,
 ) : RemoteMappable<Voucher> {
 
     companion object {
