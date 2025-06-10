@@ -10,7 +10,7 @@ import kotlinx.datetime.Instant
  * @property carbonKg the carbon emissions in kilograms.
  * @property carbonMt the carbon emissions in metric tons.
  */
-sealed class NetworkAttributeResponse {
+sealed class NetworkAttribute {
     abstract val estimatedAt: Instant
     abstract val carbonG: Double
     abstract val carbonLb: Double

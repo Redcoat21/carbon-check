@@ -22,4 +22,4 @@ data class NetworkElectricityAttribute(
     @Json(name = "carbon_lb") override val carbonLb: Double,
     @Json(name = "carbon_kg") override val carbonKg: Double,
     @Json(name = "carbon_mt") override val carbonMt: Double,
-) : NetworkAttributeResponse()
+) : NetworkAttribute()

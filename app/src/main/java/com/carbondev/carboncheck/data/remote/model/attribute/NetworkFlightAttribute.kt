@@ -23,4 +23,4 @@ data class NetworkFlightAttribute(
     @Json(name = "carbon_mt") override val carbonMt: Double,
     @Json(name = "distance_unit") val distanceUnit: String,
     @Json(name = "distance_value") val distanceValue: Double
-) : NetworkAttributeResponse()
+) : NetworkAttribute()
