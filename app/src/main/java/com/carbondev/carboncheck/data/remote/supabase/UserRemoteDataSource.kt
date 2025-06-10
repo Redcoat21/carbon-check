@@ -14,7 +14,7 @@ import javax.inject.Inject
  * @param client The Supabase client used to make network requests.
  */
 class UserRemoteDataSource @Inject constructor(private val client: SupabaseClient) {
-    suspend fun getUser(id: String): NetworkUser? {
+    suspend fun getUser(id: String): NetworkUser {
         val columns = Columns.list(NetworkUser.Columns.ALL.toList())
 
         val req = client.from(NetworkUser.TABLE_NAME).select(columns = columns) {
@@ -25,15 +25,15 @@ class UserRemoteDataSource @Inject constructor(private val client: SupabaseClien
             }
         }
 
-        val res = req.decodeSingleOrNull<NetworkUser>()
+        val res = req.decodeSingle<NetworkUser>()
         return res
     }
 
-    suspend fun getCurrentUser(): NetworkUser? {
+    suspend fun getCurrentUser(): NetworkUser {
         val currentUserInfo = client.auth.currentUserOrNull()
         // Well it shouldn't ever return null, but who knows
         val currentUser =
-            getUser(currentUserInfo?.id ?: throw IllegalStateException("No current user found"))
+            getUser(currentUserInfo?.id ?: throw NoSuchElementException("No current user found"))
         return currentUser
     }
 }

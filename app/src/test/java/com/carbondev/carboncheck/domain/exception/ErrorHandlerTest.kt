@@ -15,6 +15,13 @@ class ErrorHandlerTest {
     }
 
     @Test
+    fun `mapToDomainError should return NOT_FOUND_ERROR for NoSuchElementException`() {
+        val exception = NoSuchElementException("Not found")
+        val result = errorHandler.mapToDomainError(exception)
+        assertEquals(result, ErrorType.NOT_FOUND_ERROR)
+    }
+
+    @Test
     fun `mapToDomainError should return UNKNOWN_ERROR for other exceptions`() {
         val exception = Exception("Unknown error")
         val result = errorHandler.mapToDomainError(exception)

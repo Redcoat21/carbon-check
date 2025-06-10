@@ -55,17 +55,19 @@ class UserRepositoryTest {
     fun `getUser should return a not found error when user is not found`(): Unit = runTest {
         // Arrange
         val expectedProfileId = "invalid id"
+        val expectedException = NoSuchElementException("User not found")
 
+        every { mockErrorHandler.mapToDomainError(expectedException) } returns ErrorType.NOT_FOUND_ERROR
         coEvery {
             mockRemoteDataSource.getUser(expectedProfileId)
-        } returns null
+        } throws expectedException
 
         // Act
         val result = userRepository.getUser(expectedProfileId)
 
         // Assert
         assertTrue(result is Result.Error)
-        assertEquals((result as Result.Error).type, ErrorType.NOT_FOUND_ERROR)
+        assertEquals(ErrorType.NOT_FOUND_ERROR, (result as Result.Error).type)
     }
 
     @Test
@@ -96,7 +98,7 @@ class UserRepositoryTest {
 
         // Assert
         assertTrue(result is Result.Error)
-        assertEquals((result as Result.Error).type, ErrorType.NOT_FOUND_ERROR)
+        assertEquals(ErrorType.NOT_FOUND_ERROR, (result as Result.Error).type)
     }
 }
 

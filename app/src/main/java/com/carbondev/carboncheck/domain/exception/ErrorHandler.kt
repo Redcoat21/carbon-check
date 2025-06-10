@@ -10,9 +10,10 @@ import javax.inject.Singleton
  */
 @Singleton
 class ErrorHandler {
-    fun mapToDomainError(exception: Exception): ErrorType {
+    fun mapToDomainError(exception: Throwable): ErrorType {
         return when (exception) {
             is IOException -> ErrorType.NETWORK_ERROR
+            is NoSuchElementException -> ErrorType.NOT_FOUND_ERROR
             else -> ErrorType.UNKNOWN_ERROR
         }
     }
