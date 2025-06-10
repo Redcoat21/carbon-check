@@ -26,7 +26,7 @@ data class NetworkFlightLeg(
 data class NetworkFlightRequest(
     val passengers: Int,
     val legs: List<NetworkFlightLeg>,
-    @JsonClass(name = "distance_unit") val distanceUnit: String = "km"
+    @Json(name = "distance_unit") val distanceUnit: String = "km"
 ) : NetworkRequest() {
     override val type: String = "flight"
 }
