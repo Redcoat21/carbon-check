@@ -11,17 +11,11 @@ import javax.inject.Inject
 
 class VendorRepositoryRemoteImplementation @Inject constructor(private val remote: VendorRemoteDataSource, private val errorHandler: ErrorHandler) : VendorRepository {
     override suspend fun getVendor(id: String): Result<Vendor?> {
-        return try {
-            remote.getVendor(id)?.let { vendor ->
-                Result.Success(vendor.toDomainModel())
-            } ?: run {
-                Timber.w("Vendor with id $id not found")
-                Result.Error(message = "Vendor not found", type = ErrorType.NOT_FOUND_ERROR)
-            }
-
-        } catch (e: Exception) {
-            Timber.e("Error fetching vendor $id: ${e.message}")
-            Result.Error(type = errorHandler.mapToDomainError(e), exception = e)
-        }
+        return runCatching { remote.getVendor(id) }.fold(onSuccess = {
+            Result.Success(it.toDomainModel())
+        }, onFailure = {
+            Timber.e("Error fetching vendor $id: ${it.message}")
+            Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
+        })
     }
 }

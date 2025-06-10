@@ -7,7 +7,7 @@ import io.github.jan.supabase.postgrest.query.Columns
 import jakarta.inject.Inject
 
 class VendorRemoteDataSource @Inject constructor(private val client: SupabaseClient) {
-    suspend fun getVendor(id: String): NetworkVendor? {
+    suspend fun getVendor(id: String): NetworkVendor {
         val columns = Columns.list(NetworkVendor.Columns.ALL)
         val req = client.from(NetworkVendor.TABLE_NAME).select(columns = columns) {
             filter {
@@ -16,7 +16,7 @@ class VendorRemoteDataSource @Inject constructor(private val client: SupabaseCli
                 }
             }
         }
-        val res = req.decodeSingleOrNull<NetworkVendor>()
+        val res = req.decodeSingle<NetworkVendor>()
         return res
     }
 }

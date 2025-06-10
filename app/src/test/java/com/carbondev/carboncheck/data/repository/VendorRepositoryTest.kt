@@ -54,10 +54,12 @@ class VendorRepositoryTest {
     fun `getVendor should return a not found error when vendor is not found`() = runTest {
         // Arrange
         val expectedVendorId = "12345"
+        val expectedException = NoSuchElementException("Vendor not found")
 
+        every { mockErrorHandler.mapToDomainError(expectedException) } returns ErrorType.NOT_FOUND_ERROR
         coEvery {
             mockRemoteDataSource.getVendor(expectedVendorId)
-        } returns null
+        } throws expectedException
 
         // Act
         val result = vendorRepository.getVendor(expectedVendorId)
