@@ -1,7 +1,5 @@
 package com.carbondev.carboncheck.domain.model
 
-import java.util.Date
-
 data class User(
     val id: String,
     val firstName: String,
