@@ -1,0 +1,22 @@
+meta {
+  name: Shipping Estimation
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BASE_URL}}/estimates
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "shipping",
+    "weight_value": 200,
+    "weight_unit": "g",
+    "distance_value": 2000,
+    "distance_unit": "km",
+    "transport_method": "truck"
+  }
+}
