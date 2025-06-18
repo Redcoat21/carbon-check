@@ -1,13 +1,14 @@
 package com.carbondev.carboncheck.domain.usecase
 
-import com.carbondev.carboncheck.data.remote.repository.UserRepositoryRemoteImplementation
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.User
 import com.carbondev.carboncheck.domain.repository.UserRepository
-import com.carbondev.carboncheck.domain.usecase.profile.GetUserUseCase
+import com.carbondev.carboncheck.domain.usecase.user.GetUserUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -28,7 +29,7 @@ class GetUserUseCaseTest {
 
         coEvery {
             mockUserRepository.getUser(invalidId)
-        } returns Result.Error(type = ErrorType.VALIDATION_ERROR, message = "Invalid user ID")
+        } returns mockk()
 
         // Act
         val result = usecase.invoke(invalidId)
@@ -53,7 +54,7 @@ class GetUserUseCaseTest {
         val result = useCase.invoke(validId)
 
         // Assert
-        assert(result is Result.Success)
-        assert((result as Result.Success).data == mockUser)
+        assertTrue(result is Result.Success)
+        assertEquals((result as Result.Success).data, mockUser)
     }
 }

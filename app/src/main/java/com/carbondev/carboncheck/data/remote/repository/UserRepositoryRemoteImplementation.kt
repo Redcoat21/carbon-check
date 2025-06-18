@@ -1,7 +1,7 @@
 package com.carbondev.carboncheck.data.remote.repository
 
 import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
-import com.carbondev.carboncheck.domain.error.ErrorHandler
+import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.User
@@ -19,17 +19,23 @@ class UserRepositoryRemoteImplementation @Inject constructor(
     private val errorHandler: ErrorHandler
 ) :
     UserRepository {
-    override suspend fun getUser(id: String): Result<User?> {
-        return try {
-            remote.getProfile(id)?.let { user ->
-                Result.Success(user.toDomainModel())
-            } ?: run {
-                Timber.w("User with id $id not found")
-                Result.Error(message = "User not found", type = ErrorType.NOT_FOUND_ERROR)
-            }
-        } catch (e: Exception) {
+    override suspend fun getUser(id: String): Result<User> {
+        return runCatching {
+            remote.getUser(id)
+        }.fold(onSuccess = { Result.Success(it.toDomainModel()) }, onFailure = { e ->
             Timber.e("Error fetching user $id: ${e.message}")
             Result.Error(type = errorHandler.mapToDomainError(e), exception = e)
-        }
+        })
+    }
+
+    override suspend fun getCurrentUser(): Result<User> {
+        return runCatching { remote.getCurrentUser() }.fold(
+            onSuccess = {
+                Result.Success(it.toDomainModel())
+            },
+            onFailure = {
+                Timber.e("Error fetching current user: ${it.message}")
+                Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
+            })
     }
 }

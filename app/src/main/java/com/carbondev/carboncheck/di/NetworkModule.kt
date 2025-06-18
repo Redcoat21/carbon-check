@@ -3,6 +3,9 @@ package com.carbondev.carboncheck.di
 import com.carbondev.carboncheck.BuildConfig
 import com.carbondev.carboncheck.data.remote.api.CarbonInterfaceService
 import com.squareup.moshi.FromJson
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -15,6 +18,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.MoshiSerializer
+import kotlinx.datetime.Instant
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.text.SimpleDateFormat
@@ -36,19 +40,26 @@ import javax.inject.Named
 object NetworkModule {
     /**
      * Custom Moshi adapter for handling ISO 8601 date format.
-     * This is used to parse and serialize dates in the Supabase client.
      */
-    private class IsoDateAdapter {
+    private class IsoDateAdapter : JsonAdapter<Instant>() {
         // Locale doesn't matter because the timestamp is in UTC.
         private val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
 
-        @ToJson
-        fun toJson(date: Date): String = formatter.format(date)
-
         @FromJson
-        fun fromJson(date: String): Date = formatter.parse(date)!!
+        override fun fromJson(reader: JsonReader): Instant? {
+            // Read the string value from JSON
+            val instantString = reader.nextString()
+            // Parse the string to an Instant
+            return instantString?.let { Instant.parse(it) }
+        }
+
+        @ToJson
+        override fun toJson(writer: JsonWriter, value: Instant?) {
+            // Write the Instant as an ISO 8601 string
+            writer.value(value?.toString())
+        }
     }
 
     /**

@@ -7,5 +7,6 @@ import com.carbondev.carboncheck.domain.model.User
  * Repository interface for managing user data.
  */
 interface UserRepository {
-    suspend fun getUser(id: String): Result<User?>
+    suspend fun getUser(id: String): Result<User>
+    suspend fun getCurrentUser(): Result<User>
 }

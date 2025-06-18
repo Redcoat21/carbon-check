@@ -1,0 +1,11 @@
+meta {
+  name: Check API Key Validity
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/auth
+  body: none
+  auth: inherit
+}
