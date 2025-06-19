@@ -1,7 +1,6 @@
 package com.carbondev.carboncheck.data.remote.repository
 
 import com.carbondev.carboncheck.data.remote.supabase.VendorRemoteDataSource
-import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.model.Vendor
