@@ -96,7 +96,7 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     // Proto DataStore dependencies, used for storing user preferences as an alternative to SharedPreferences.
-    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore)
 
     // Retrofit dependencies
     implementation(libs.retrofit)
