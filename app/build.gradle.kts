@@ -102,5 +102,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.moshi)
+
+    // Konform dependencies for validation
+    implementation(libs.konform.jvm)
 }
 
