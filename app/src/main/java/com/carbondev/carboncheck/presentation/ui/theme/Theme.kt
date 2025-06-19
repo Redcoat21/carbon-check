@@ -1,4 +1,4 @@
-package com.carbondev.carboncheck.ui.theme
+package com.carbondev.carboncheck.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

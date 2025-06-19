@@ -1,4 +1,4 @@
-package com.carbondev.carboncheck.ui.theme
+package com.carbondev.carboncheck.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
