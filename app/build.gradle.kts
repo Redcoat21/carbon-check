@@ -3,7 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    kotlin("plugin.serialization") version "2.0.21"
+    kotlin("plugin.serialization") version "2.1.21"
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 android {
     namespace = "com.carbondev.carboncheck"
@@ -55,11 +57,15 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    // Testing dependencies (JUnit, MockK)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -69,6 +75,35 @@ dependencies {
     implementation(libs.auth.kt)
     implementation(libs.realtime.kt)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.serializer.moshi)
+
+    // Moshi dependencies
+    implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapters)
+    ksp(libs.moshi.kotlin.codegen)
+
+    // Hilt dependencies
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose) // Used for Hilt navigation, do not install the other navigation library
+
+    // Timber dependencies
+    implementation(libs.timber) // Timber is a logger with a small, extensible API which provides utility on top of Android's normal Log class.
+
+    // Coil dependencies, used for image loading from remote sources.
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    // Proto DataStore dependencies, used for storing user preferences as an alternative to SharedPreferences.
+    implementation(libs.androidx.datastore)
+
+    // Retrofit dependencies
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.moshi)
+
+    // Konform dependencies for validation
+    implementation(libs.konform.jvm)
 }
 
