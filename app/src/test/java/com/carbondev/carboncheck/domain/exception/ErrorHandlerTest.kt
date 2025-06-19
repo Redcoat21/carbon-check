@@ -1,6 +1,8 @@
 package com.carbondev.carboncheck.domain.exception
 
 import com.carbondev.carboncheck.domain.common.ErrorType
+import io.github.jan.supabase.exceptions.RestException
+import io.mockk.mockk
 import org.junit.Test
 import junit.framework.TestCase.assertEquals
 
@@ -10,6 +12,13 @@ class ErrorHandlerTest {
     @Test
     fun `mapToDomainError should return NETWORK_ERROR for IOException`() {
         val exception = java.io.IOException("Network error")
+        val result = errorHandler.mapToDomainError(exception)
+        assertEquals(result, ErrorType.NETWORK_ERROR)
+    }
+
+    @Test
+    fun `mapToDomainError should return NETWORK_ERROR for RestException`() {
+        val exception = RestException("", "", mockk(relaxed = true))
         val result = errorHandler.mapToDomainError(exception)
         assertEquals(result, ErrorType.NETWORK_ERROR)
     }
