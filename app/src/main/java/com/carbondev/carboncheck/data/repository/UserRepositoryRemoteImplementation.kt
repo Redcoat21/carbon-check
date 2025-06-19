@@ -1,4 +1,4 @@
-package com.carbondev.carboncheck.data.remote.repository
+package com.carbondev.carboncheck.data.repository
 
 import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
 import com.carbondev.carboncheck.domain.common.Result

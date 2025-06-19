@@ -1,4 +1,4 @@
-package com.carbondev.carboncheck.data.remote.repository
+package com.carbondev.carboncheck.data.repository
 
 import com.carbondev.carboncheck.data.remote.model.NetworkVoucher
 import com.carbondev.carboncheck.data.remote.supabase.VoucherRemoteDataSource

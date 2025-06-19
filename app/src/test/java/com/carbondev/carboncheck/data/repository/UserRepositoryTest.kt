@@ -1,7 +1,6 @@
 package com.carbondev.carboncheck.data.repository
 
 import com.carbondev.carboncheck.data.remote.model.NetworkUser
-import com.carbondev.carboncheck.data.remote.repository.UserRepositoryRemoteImplementation
 import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result

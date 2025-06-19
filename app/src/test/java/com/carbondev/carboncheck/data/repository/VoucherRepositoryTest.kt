@@ -1,7 +1,6 @@
 package com.carbondev.carboncheck.data.repository
 
 import com.carbondev.carboncheck.data.remote.model.NetworkVoucher
-import com.carbondev.carboncheck.data.remote.repository.VoucherRepositoryImplementation
 import com.carbondev.carboncheck.data.remote.supabase.VoucherRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result

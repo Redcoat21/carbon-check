@@ -1,4 +1,4 @@
-package com.carbondev.carboncheck.data.remote.repository
+package com.carbondev.carboncheck.data.repository
 
 import com.carbondev.carboncheck.data.remote.api.CarbonInterfaceService
 import com.carbondev.carboncheck.data.remote.model.ApiResponse

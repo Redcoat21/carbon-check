@@ -3,7 +3,6 @@ package com.carbondev.carboncheck.data.repository
 import com.carbondev.carboncheck.data.remote.api.CarbonInterfaceService
 import com.carbondev.carboncheck.data.remote.model.attribute.NetworkFlightAttribute
 import com.carbondev.carboncheck.data.remote.model.request.NetworkFlightLeg
-import com.carbondev.carboncheck.data.remote.repository.EstimationRepositoryImplementation
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler

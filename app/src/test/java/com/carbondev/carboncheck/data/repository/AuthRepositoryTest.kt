@@ -1,6 +1,5 @@
 package com.carbondev.carboncheck.data.repository
 
-import com.carbondev.carboncheck.data.remote.repository.AuthRepositoryImplementation
 import com.carbondev.carboncheck.data.remote.supabase.AuthRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
