@@ -13,11 +13,11 @@ interface AuthRepository {
     suspend fun loginWithEmail(email: String, password: String): Result<Unit>
 
     /**
-     * Logs in a user with the specified phone number and OTP.
+     * Registers a new user with the specified email and password.
      *
-     * @param phoneNumber The user's phone number.
-     * @param otp The one-time password sent to the user's phone.
-     * @return A result indicating success or failure of the login operation.
+     * @param email The user's email address.
+     * @param password The user's password.
+     * @return A result indicating success or failure of the registration operation.
      */
-    suspend fun loginWithPhone(phoneNumber: String, otp: String): Result<Unit>
+    suspend fun registerWithEmail(email: String, password: String): Result<Unit>
 }

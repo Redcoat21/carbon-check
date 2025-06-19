@@ -1,6 +1,5 @@
 package com.carbondev.carboncheck.domain.usecase.auth
 
-import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.repository.AuthRepository
@@ -8,7 +7,7 @@ import com.carbondev.carboncheck.domain.validation.ValidationRules
 import io.konform.validation.Validation
 import javax.inject.Inject
 
-class LoginWithEmailAndPasswordUseCase @Inject constructor(
+class RegisterWithEmailAndPasswordUseCase @Inject constructor(
     private val repository: AuthRepository,
     private val errorHandler: ErrorHandler
 ) {
@@ -33,7 +32,6 @@ class LoginWithEmailAndPasswordUseCase @Inject constructor(
                 message = validationResult.errors.joinToString(", ")
             )
         }
-
-        return repository.loginWithEmail(email = email, password = password)
+        return repository.registerWithEmail(email, password)
     }
 }

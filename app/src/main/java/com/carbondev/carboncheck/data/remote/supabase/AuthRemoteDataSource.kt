@@ -25,6 +25,18 @@ class AuthRemoteDataSource @Inject constructor(private val client: SupabaseClien
     }
 
     /**
+     * Registers a new user with an email and password.
+     * @param email The user's email address.
+     * @param password The user's password.
+     */
+    suspend fun registerWithEmailAndPassword(email: String, password: String) {
+        client.auth.signUpWith(Email) {
+            this.email = email
+            this.password = password
+        }
+    }
+
+    /**
      * Logs out the current user.
      */
     suspend fun logout() {
