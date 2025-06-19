@@ -8,8 +8,11 @@ import javax.inject.Inject
 
 class GetVoucherUseCase @Inject constructor(private val voucherRepository: VoucherRepository) {
     suspend operator fun invoke(id: String): Result<Voucher> {
-        if(id.isBlank()) {
-            return Result.Error(type = ErrorType.VALIDATION_ERROR, exception = IllegalArgumentException("Voucher ID cannot be blank"))
+        if (id.isBlank()) {
+            return Result.Error(
+                type = ErrorType.VALIDATION_ERROR,
+                exception = IllegalArgumentException("Voucher ID cannot be blank")
+            )
         }
         return voucherRepository.getVoucher(id)
     }

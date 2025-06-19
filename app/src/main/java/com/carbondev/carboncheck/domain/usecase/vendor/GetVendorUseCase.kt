@@ -9,9 +9,12 @@ import javax.inject.Inject
 
 class GetVendorUseCase @Inject constructor(private val repository: VendorRepository) {
     suspend operator fun invoke(id: String): Result<Vendor?> {
-        if(id.isEmpty() || id.isBlank()) {
+        if (id.isEmpty() || id.isBlank()) {
             Timber.w("Invalid vendor ID: $id")
-            return Result.Error(type = ErrorType.VALIDATION_ERROR,message = "Vendor ID cannot be empty or blank")
+            return Result.Error(
+                type = ErrorType.VALIDATION_ERROR,
+                message = "Vendor ID cannot be empty or blank"
+            )
         }
 
         return repository.getVendor(id)

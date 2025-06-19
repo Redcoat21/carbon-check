@@ -20,7 +20,10 @@ class CalculateFlightCarbonEstimationUseCase @Inject constructor(
         when {
             passengers < 1 -> return createError("Number of passengers must be at least 1")
             legs.isEmpty() -> return createError("Flight legs cannot be empty")
-            distanceUnit !in listOf("km", "mi") -> return createError("Distance unit must be either 'km' or 'mi'")
+            distanceUnit !in listOf(
+                "km",
+                "mi"
+            ) -> return createError("Distance unit must be either 'km' or 'mi'")
         }
 
         return repository.getFlightEstimation(

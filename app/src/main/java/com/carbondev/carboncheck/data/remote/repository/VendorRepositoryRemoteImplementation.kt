@@ -8,7 +8,10 @@ import com.carbondev.carboncheck.domain.repository.VendorRepository
 import timber.log.Timber
 import javax.inject.Inject
 
-class VendorRepositoryRemoteImplementation @Inject constructor(private val remote: VendorRemoteDataSource, private val errorHandler: ErrorHandler) : VendorRepository {
+class VendorRepositoryRemoteImplementation @Inject constructor(
+    private val remote: VendorRemoteDataSource,
+    private val errorHandler: ErrorHandler
+) : VendorRepository {
     override suspend fun getVendor(id: String): Result<Vendor?> {
         return runCatching { remote.getVendor(id) }.fold(onSuccess = {
             Result.Success(it.toDomainModel())

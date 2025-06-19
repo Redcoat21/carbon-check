@@ -4,7 +4,6 @@ import com.carbondev.carboncheck.domain.model.User
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.datetime.Instant
-import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class NetworkUser(
@@ -39,6 +38,7 @@ data class NetworkUser(
             EMAIL
         )
     }
+
     override fun toDomainModel(): User {
         return User(
             id = id,

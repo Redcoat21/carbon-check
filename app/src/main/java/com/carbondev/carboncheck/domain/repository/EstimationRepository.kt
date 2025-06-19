@@ -12,5 +12,9 @@ interface EstimationRepository {
      * @param distanceUnit The unit of distance to be used in the estimation (default is "km").
      * @return A [Result] containing the FlightEstimation or an error.
      */
-    suspend fun getFlightEstimation(passengers: Int, legs: List<FlightLeg>, distanceUnit: String = "km"): Result<FlightEstimation>
+    suspend fun getFlightEstimation(
+        passengers: Int,
+        legs: List<FlightLeg>,
+        distanceUnit: String = "km"
+    ): Result<FlightEstimation>
 }

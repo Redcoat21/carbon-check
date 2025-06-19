@@ -4,7 +4,6 @@ import com.carbondev.carboncheck.domain.model.Vendor
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.datetime.Instant
-import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class NetworkVendor(

@@ -1,6 +1,5 @@
 package com.carbondev.carboncheck.domain.usecase.auth
 
-import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.repository.AuthRepository

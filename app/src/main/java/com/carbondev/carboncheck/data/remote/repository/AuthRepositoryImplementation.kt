@@ -23,7 +23,7 @@ class AuthRepositoryImplementation @Inject constructor(
     override suspend fun registerWithEmail(email: String, password: String): Result<Unit> {
         return runCatching {
             remote.registerWithEmailAndPassword(email = email, password = password)
-        }.fold(onSuccess = { Result.Success(Unit)}, onFailure = {
+        }.fold(onSuccess = { Result.Success(Unit) }, onFailure = {
             Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
         })
     }

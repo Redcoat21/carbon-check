@@ -4,7 +4,6 @@ import com.carbondev.carboncheck.domain.model.Voucher
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.datetime.Instant
-import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class NetworkVoucher(
@@ -33,6 +32,7 @@ data class NetworkVoucher(
             UPDATED_AT,
         )
     }
+
     override fun toDomainModel(): Voucher {
         return Voucher(
             id = id,

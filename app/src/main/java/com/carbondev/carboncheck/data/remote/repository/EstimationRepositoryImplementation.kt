@@ -26,7 +26,11 @@ class EstimationRepositoryImplementation @Inject constructor(
     ): Result<FlightEstimation> {
         return runCatching {
             service.getFlightEstimation(
-                request = NetworkFlightRequest(passengers, legs.map { it.toRemoteModel() }, distanceUnit)
+                request = NetworkFlightRequest(
+                    passengers,
+                    legs.map { it.toRemoteModel() },
+                    distanceUnit
+                )
             ).let { evaluateApiResponse(it) }
         }.fold(
             onSuccess = { response ->
