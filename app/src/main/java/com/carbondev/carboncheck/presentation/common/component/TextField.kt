@@ -149,9 +149,9 @@ fun PasswordTextField(
         keyboardActions = keyboardActions
     ) {
         val icon = if (revealPassword) {
-            painterResource(R.drawable.eco)
+            painterResource(R.drawable.hide_text)
         } else {
-            painterResource(R.drawable.eco)
+            painterResource(R.drawable.show_text)
         }
 
         IconButton(
