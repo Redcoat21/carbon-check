@@ -18,16 +18,13 @@ import org.junit.Test
 class LoginWithEmailAndPasswordUseCaseTest {
     @MockK
     private lateinit var mockRepository: AuthRepository
-    @MockK
-    private lateinit var mockErrorHandler: ErrorHandler
     private lateinit var loginWithEmailAndPasswordUseCase: LoginWithEmailAndPasswordUseCase
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
         loginWithEmailAndPasswordUseCase =
-            LoginWithEmailAndPasswordUseCase(mockRepository, mockErrorHandler)
-        every { mockErrorHandler.mapToDomainError(any<IllegalArgumentException>()) } returns ErrorType.VALIDATION_ERROR
+            LoginWithEmailAndPasswordUseCase(mockRepository)
     }
 
     @Test
@@ -45,8 +42,8 @@ class LoginWithEmailAndPasswordUseCaseTest {
     @Test
     fun `invoke should return error when validation failed`() = runTest {
         // Arrange
-        var email = "invalid-email"
-        var password = "short"
+        var email = ""
+        var password = ""
         // Act
         val result = loginWithEmailAndPasswordUseCase(email = email, password = password)
         // Assert
