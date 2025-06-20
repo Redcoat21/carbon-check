@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.carbondev.carboncheck.presentation.auth.screen.LoginScreen
+import com.carbondev.carboncheck.presentation.auth.screen.RegisterScreen
 
 /**
  * Navigation component for the CarbonCheck application.
@@ -21,7 +22,7 @@ fun NavigationComponent(startDestination: String = Routes.Auth.Login.route) {
         }
 
         composable(Routes.Auth.Register.route) {
-
+            RegisterScreen(navController = navController)
         }
 
     }
