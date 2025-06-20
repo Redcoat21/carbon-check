@@ -22,8 +22,8 @@ class RegisterViewModel @Inject constructor(
                 email = email,
                 password = password,
                 confirmPassword = confirmPassword,
-//                firstName = firstName,
-//                lastName = lastName
+                firstName = firstName,
+                lastName = lastName
             )) {
             is Result.Success -> {
                 setSuccess(result.data)
