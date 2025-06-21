@@ -47,7 +47,6 @@ import com.carbondev.carboncheck.presentation.common.UiStateHandler
 import com.carbondev.carboncheck.presentation.common.component.PasswordTextField
 import com.carbondev.carboncheck.presentation.common.component.StringTextField
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
-import com.carbondev.carboncheck.presentation.ui.theme.Green80
 
 @Composable
 fun RegisterScreen(
@@ -138,10 +137,20 @@ fun RegisterScreenContent(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             // Replaced fullName field with firstName and lastName
-            StringTextField(label = "First Name", value = firstName, onValueChange = { firstName = it })
-            StringTextField(label = "Last Name", value = lastName, onValueChange = { lastName = it })
+            StringTextField(
+                label = "First Name",
+                value = firstName,
+                onValueChange = { firstName = it })
+            StringTextField(
+                label = "Last Name",
+                value = lastName,
+                onValueChange = { lastName = it })
             StringTextField(label = "Email", value = email, onValueChange = { email = it })
-            PasswordTextField(label = "Password", value = password, onValueChange = { password = it },)
+            PasswordTextField(
+                label = "Password",
+                value = password,
+                onValueChange = { password = it },
+            )
             PasswordTextField(
                 label = "Confirm Password",
                 value = confirmPassword,
@@ -151,7 +160,13 @@ fun RegisterScreenContent(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        onRegisterClicked(email, password, confirmPassword, firstName, lastName) // Updated call
+                        onRegisterClicked(
+                            email,
+                            password,
+                            confirmPassword,
+                            firstName,
+                            lastName
+                        ) // Updated call
                     }
                 )
             )

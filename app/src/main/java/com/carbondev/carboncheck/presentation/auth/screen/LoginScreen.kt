@@ -47,7 +47,6 @@ import com.carbondev.carboncheck.presentation.common.UiStateHandler
 import com.carbondev.carboncheck.presentation.common.component.PasswordTextField
 import com.carbondev.carboncheck.presentation.common.component.StringTextField
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
-import com.carbondev.carboncheck.presentation.ui.theme.Green80
 
 @Composable
 fun LoginScreen(
@@ -80,7 +79,8 @@ fun LoginScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background).verticalScroll(scrollState),
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

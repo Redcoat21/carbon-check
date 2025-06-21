@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 import com.carbondev.carboncheck.R
 import com.carbondev.carboncheck.presentation.Routes
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
-import com.carbondev.carboncheck.presentation.ui.theme.Green80
 import com.carbondev.carboncheck.presentation.ui.theme.Typography
 
 @Composable

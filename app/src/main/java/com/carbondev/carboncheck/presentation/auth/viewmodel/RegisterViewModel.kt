@@ -14,7 +14,13 @@ class RegisterViewModel @Inject constructor(
     private val registerWithEmailAndPasswordUseCase: RegisterWithEmailAndPasswordUseCase
 ) : BaseViewModel() {
 
-    fun register(email: String, password: String, confirmPassword: String, firstName: String, lastName: String) = viewModelScope.launch {
+    fun register(
+        email: String,
+        password: String,
+        confirmPassword: String,
+        firstName: String,
+        lastName: String
+    ) = viewModelScope.launch {
         setLoading()
 
         when (val result =
