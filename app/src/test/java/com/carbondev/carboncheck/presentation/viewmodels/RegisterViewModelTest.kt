@@ -68,7 +68,7 @@ class RegisterViewModelTest {
     }
 
     @Test
-    fun `UI state should be success when login is successful`() = runTest {
+    fun `UI state should be success when register is successful`() = runTest {
         // Arrange
         val email = "johndoe"
         val password = "Password123!"
@@ -87,7 +87,7 @@ class RegisterViewModelTest {
     }
 
     @Test
-    fun `UI state should be error when login fails`() = runTest {
+    fun `UI state should be error when register fails`() = runTest {
         // Arrange
         val email = "johndoe"
         val password = "Password123!"
