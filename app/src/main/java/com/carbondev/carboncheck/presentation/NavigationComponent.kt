@@ -7,6 +7,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.carbondev.carboncheck.presentation.auth.screen.LoginScreen
 import com.carbondev.carboncheck.presentation.auth.screen.RegisterScreen
+import com.carbondev.carboncheck.presentation.auth.screen.WelcomeScreen
 
 /**
  * Navigation component for the CarbonCheck application.
@@ -17,6 +18,10 @@ fun NavigationComponent(startDestination: String = Routes.Auth.Login.route) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     NavHost(navController = navController, startDestination = startDestination) {
+        composable(Routes.Auth.Welcome.route) {
+            WelcomeScreen(navHostController = navController)
+        }
+
         composable(Routes.Auth.Login.route) {
             LoginScreen(navController = navController)
         }

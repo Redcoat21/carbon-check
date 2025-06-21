@@ -31,7 +31,6 @@ class LoginViewModel @Inject constructor(private val loginWithEmailAndPasswordUs
                 setError(errorMessage)
             }
         }
-
     }
 }
 
