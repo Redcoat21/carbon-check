@@ -1,4 +1,4 @@
-package com.carbondev.carboncheck.presentation.navbar
+package com.carbondev.carboncheck.presentation.navbar.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -18,13 +19,22 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.carbondev.carboncheck.presentation.auth.viewmodel.LoginViewModel
 import com.carbondev.carboncheck.presentation.content.HomePage
 import com.carbondev.carboncheck.presentation.content.ProfilePage
 import com.carbondev.carboncheck.presentation.content.SettingsPage
 import com.carbondev.carboncheck.presentation.content.StatsPage
+import com.carbondev.carboncheck.presentation.navbar.NavItem
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    viewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
+) {
 
     val navItemList = listOf(
         NavItem("Home", Icons.Default.Home),
@@ -40,7 +50,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
     Scaffold (
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar {
+            NavigationBar (
+                containerColor = MaterialTheme.colorScheme.primary,
+            ) {
                 navItemList.forEachIndexed {index, navItem ->
                     NavigationBarItem(
                         selected = selectedIndex == index,
@@ -48,15 +60,22 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             selectedIndex = index
                         },
                         icon = {
-                            Icon(imageVector = navItem.icon, contentDescription = "Icon")
+                            Icon(
+                                imageVector = navItem.icon,
+                                contentDescription = "Icon",
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
                         },
                         label = {
-                            Text(text = navItem.label)
-                        }
+                            Text(
+                                text = navItem.label,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        },
                     )
                 }
             }
-        }
+        },
     ) { innerPadding ->
         ContentScreen(modifier = Modifier.padding(innerPadding), selectedIndex)
     }

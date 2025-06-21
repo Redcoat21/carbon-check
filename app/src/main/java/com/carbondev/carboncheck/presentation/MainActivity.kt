@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.carbondev.carboncheck.presentation.navbar.MainScreen
+import com.carbondev.carboncheck.presentation.navbar.screen.MainScreen
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
 import dagger.hilt.android.AndroidEntryPoint
 

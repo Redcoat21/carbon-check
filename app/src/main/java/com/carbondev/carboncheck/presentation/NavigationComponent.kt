@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.carbondev.carboncheck.presentation.auth.screen.LoginScreen
 import com.carbondev.carboncheck.presentation.auth.screen.RegisterScreen
 import com.carbondev.carboncheck.presentation.auth.screen.WelcomeScreen
+import com.carbondev.carboncheck.presentation.navbar.screen.MainScreen
 
 /**
  * Navigation component for the CarbonCheck application.
@@ -30,5 +31,8 @@ fun NavigationComponent(startDestination: String = Routes.Auth.Login.route) {
             RegisterScreen(navController = navController)
         }
 
+        composable(Routes.Home.route) {
+            MainScreen(navController = navController)
+        }
     }
 }
