@@ -18,6 +18,7 @@ import org.junit.Test
 class RegisterWithEmailAndPasswordUseCaseTest {
     @MockK
     private lateinit var mockRepository: AuthRepository
+
     @MockK
     private lateinit var mockErrorHandler: ErrorHandler
     private lateinit var registerWithEmailAndPasswordUseCase: RegisterWithEmailAndPasswordUseCase
@@ -35,9 +36,23 @@ class RegisterWithEmailAndPasswordUseCaseTest {
         // Arrange
         var email = "test@example.com"
         var password = "password123!"
-        coEvery { mockRepository.registerWithEmail(email, password) } returns Result.Success(data = Unit)
+        val firstName = "John"
+        val lastName = "Doe"
+        val passwordConfirmation = "password123!"
+        coEvery {
+            mockRepository.registerWithEmail(
+                email,
+                password
+            )
+        } returns Result.Success(data = Unit)
         // Act
-        val result = registerWithEmailAndPasswordUseCase(email = email, password = password)
+        val result = registerWithEmailAndPasswordUseCase(
+            email = email,
+            password = password,
+            firstName = firstName,
+            lastName = lastName,
+            confirmPassword = passwordConfirmation
+        )
         // Assert
         assertTrue(result is Result.Success)
     }
@@ -47,10 +62,19 @@ class RegisterWithEmailAndPasswordUseCaseTest {
         // Arrange
         var email = "invalid-email"
         var password = "short"
+        val firstName = "John"
+        val lastName = "Doe"
+        val passwordConfirmation = "password123"
         // Act
-        val result = registerWithEmailAndPasswordUseCase(email = email, password = password)
+        val result = registerWithEmailAndPasswordUseCase(
+            email = email,
+            password = password,
+            firstName = firstName,
+            lastName = lastName,
+            confirmPassword = passwordConfirmation
+        )
         // Assert
-        assertTrue(result is com.carbondev.carboncheck.domain.common.Result.Error)
+        assertTrue(result is Result.Error)
         assertEquals(ErrorType.VALIDATION_ERROR, (result as Result.Error).type)
     }
 }
