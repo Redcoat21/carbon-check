@@ -19,14 +19,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.carbondev.carboncheck.presentation.auth.viewmodel.LoginViewModel
-import com.carbondev.carboncheck.presentation.content.HomePage
-import com.carbondev.carboncheck.presentation.content.ProfilePage
-import com.carbondev.carboncheck.presentation.content.SettingsPage
-import com.carbondev.carboncheck.presentation.content.StatsPage
+import com.carbondev.carboncheck.presentation.content.screen.HomePage
+import com.carbondev.carboncheck.presentation.content.screen.ProfilePage
+import com.carbondev.carboncheck.presentation.content.screen.SettingsPage
+import com.carbondev.carboncheck.presentation.content.screen.StatsPage
 import com.carbondev.carboncheck.presentation.navbar.NavItem
 
 @Composable

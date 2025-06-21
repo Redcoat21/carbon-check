@@ -1,6 +1,5 @@
-package com.carbondev.carboncheck.presentation.content
+package com.carbondev.carboncheck.presentation.content.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,14 +11,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier) {
+fun SettingsPage(modifier: Modifier = Modifier) {
     Column (
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Home Page",
+            text = "Settings Page",
             fontSize = 40.sp,
             color = Color.Black
         )
