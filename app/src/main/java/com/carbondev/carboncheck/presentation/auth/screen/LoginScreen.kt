@@ -89,7 +89,7 @@ fun LoginScreenContent(
             modifier = Modifier
                 .size(70.dp)
                 .clip(CircleShape)
-                .background(Green80)
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.eco), // Replace with your actual drawable
@@ -222,5 +222,3 @@ fun LoginScreenComposeLightModeLandscapePreview() {
         LoginScreenContent(onSignInClicked = { _, _ -> }, onSignUpClicked = {})
     }
 }
-
-

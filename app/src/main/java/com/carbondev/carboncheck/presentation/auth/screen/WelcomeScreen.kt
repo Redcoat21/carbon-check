@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,23 +32,27 @@ fun WelcomeScreen(navHostController: NavHostController) {
 
 @Composable
 fun WelcomeScreenContent(onGetStartedClick: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-        modifier = Modifier.fillMaxSize()
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        Image(
-            painter = painterResource(R.drawable.eco),
-            contentDescription = "App logo",
-        )
-        Text("Carbon Check", color = Green80, style = Typography.titleLarge)
-        Text(
-            "Ready to start your eco-friendly journey?",
-            color = Green80,
-            style = Typography.bodyMedium
-        )
-        Button(onClick = onGetStartedClick, modifier = Modifier.fillMaxWidth(0.7f)) {
-            Text("Get started")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                painter = painterResource(R.drawable.eco),
+                contentDescription = "App logo",
+            )
+            Text("Carbon Check", style = Typography.titleLarge)
+            Text(
+                "Ready to start your eco-friendly journey?",
+                style = Typography.bodyMedium
+            )
+            Button(onClick = onGetStartedClick, modifier = Modifier.fillMaxWidth(0.7f)) {
+                Text("Get started")
+            }
         }
     }
 

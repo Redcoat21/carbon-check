@@ -103,7 +103,7 @@ fun RegisterScreenContent(
             modifier = Modifier
                 .size(70.dp)
                 .clip(CircleShape)
-                .background(Green80)
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.eco),
