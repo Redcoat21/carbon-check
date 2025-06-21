@@ -105,5 +105,7 @@ dependencies {
 
     // Konform dependencies for validation
     implementation(libs.konform.jvm)
+
+//    implementation(libs.androidx.navigation.compose)
 }
 
