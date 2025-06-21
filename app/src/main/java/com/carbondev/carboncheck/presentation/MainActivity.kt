@@ -15,8 +15,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CarbonCheckTheme {
-//                NavigationComponent()
-                MainScreen()
+                NavigationComponent()
+//                MainScreen()
             }
         }
     }
