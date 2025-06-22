@@ -136,8 +136,7 @@ fun TodayImpactCard(
 @Composable
 fun Welcoming(
     modifier: Modifier = Modifier,
-    userName: String = "Vivek",
-    currentKg: Float = 120f,
+    userName: String = "Vivek"
 ) {
     Column(
         modifier = modifier
