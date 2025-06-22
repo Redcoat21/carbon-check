@@ -5,6 +5,9 @@
       <SelectionState runConfigName="CarbonCheck.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="registerScreen_whenSignInClicked_navigatesToLogin()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
