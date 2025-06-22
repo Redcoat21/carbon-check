@@ -24,20 +24,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.yml.charts.common.model.PlotType
+import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.charts.PieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 
 @Composable
-fun StatsPage(modifier: Modifier = Modifier) {
+fun StatsPage(
+    modifier: Modifier = Modifier,
+    totalCarbon: Int = 100,
+) {
     val slices = listOf(
-        PieChartData.Slice("Transport", 30f, Color(0xFF66BB6A)),
+        PieChartData.Slice("Transport", 40f, Color(0xFF66BB6A)),
         PieChartData.Slice("Energy", 50f, Color(0xFFEF5350)),
         PieChartData.Slice("Waste", 20f, Color(0xFF42A5F5))
     )
     val pieData = PieChartData(
         slices = slices,
-        plotType = PlotType.Pie,
+        plotType = PlotType.Donut,
         )
 
     Column(
@@ -49,16 +53,20 @@ fun StatsPage(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(16.dp))
         Text("Your Weekly Comparison", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(12.dp))
-        PieChart(
+        DonutPieChart(
             modifier = Modifier.size(400.dp),
             pieChartData = pieData,
             pieChartConfig = PieChartConfig(
                 showSliceLabels = false,
                 labelVisible = true,
-                labelType = PieChartConfig.LabelType.PERCENTAGE,
-                labelColor = Color.White,
+                labelType = PieChartConfig.LabelType.VALUE,
+                labelColor = MaterialTheme.colorScheme.primary,
                 isAnimationEnable = true,
-                animationDuration = 800
+                animationDuration = 800,
+                isSumVisible = true,
+                sumUnit = "Kg",
+                labelFontSize = 50.sp,
+                backgroundColor = MaterialTheme.colorScheme.background
             )
         )
 
