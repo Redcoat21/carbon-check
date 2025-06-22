@@ -10,5 +10,6 @@ sealed class Routes(val route: String) {
         object Register : Routes("auth/register")
 
     }
+
     object Home : Routes("home")
 }

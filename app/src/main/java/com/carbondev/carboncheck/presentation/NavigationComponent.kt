@@ -14,7 +14,7 @@ import com.carbondev.carboncheck.presentation.navbar.screen.MainScreen
  * Navigation component for the CarbonCheck application.
  */
 @Composable
-fun NavigationComponent(startDestination: String = Routes.Auth.Login.route) {
+fun NavigationComponent(startDestination: String = Routes.Auth.Welcome.route) {
     val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
