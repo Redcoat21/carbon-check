@@ -3,6 +3,7 @@ package com.carbondev.carboncheck.domain.exception
 import com.carbondev.carboncheck.domain.common.ErrorType
 import io.github.jan.supabase.exceptions.RestException
 import kotlinx.io.IOException
+import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
@@ -10,7 +11,7 @@ import javax.inject.Singleton
  * It maps exceptions to domain-specific error types.
  */
 @Singleton
-class ErrorHandler {
+class ErrorHandler @Inject constructor() {
     fun mapToDomainError(exception: Throwable): ErrorType {
         return when (exception) {
             is IOException, is RestException -> ErrorType.NETWORK_ERROR
