@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -26,6 +27,7 @@ import com.carbondev.carboncheck.presentation.content.screen.HomePage
 import com.carbondev.carboncheck.presentation.content.screen.ProfilePage
 import com.carbondev.carboncheck.presentation.content.screen.SettingsPage
 import com.carbondev.carboncheck.presentation.content.screen.StatsPage
+import com.carbondev.carboncheck.presentation.content.screen.VoucherPage
 import com.carbondev.carboncheck.presentation.navbar.NavItem
 
 @Composable
@@ -39,7 +41,9 @@ fun MainScreen(
         NavItem("Home", Icons.Default.Home),
         NavItem("Stats", Icons.Default.DateRange),
         NavItem("Profile", Icons.Default.Person),
-        NavItem("Settings", Icons.Default.Settings)
+        NavItem("Voucher", Icons.Default.ShoppingCart),
+        NavItem("Settings", Icons.Default.Settings),
+
     )
 
     var selectedIndex by remember {
@@ -86,6 +90,7 @@ fun ContentScreen(modifier: Modifier = Modifier, selectedIndex: Int) {
         0 -> HomePage()
         1 -> StatsPage()
         2 -> ProfilePage()
-        3 -> SettingsPage()
+        3 -> VoucherPage()
+        4 -> SettingsPage()
     }
 }
