@@ -10,10 +10,7 @@ import jakarta.inject.Inject
 interface UserLocalDataSource {
     suspend fun saveUser(user: User)
     suspend fun getUser(): User
-    suspend fun clearUser()
-=========
     suspend fun deleteUser()
->>>>>>>>> Temporary merge branch 2
 }
 
 class UserLocalDataSourceImplementation @Inject constructor(
@@ -29,7 +26,7 @@ class UserLocalDataSourceImplementation @Inject constructor(
         return user?.toDomainModel() ?: throw NoSuchElementException("User not found")
     }
 
-    override suspend fun clearUser() {
+    override suspend fun deleteUser() {
         userDao.clearUser()
     }
 }
