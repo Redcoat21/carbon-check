@@ -69,6 +69,7 @@ fun RegisterScreen(
                     firstName = firstName,
                     lastName = lastName
                 )
+                navController.navigate(Routes.Auth.Login.route)
             },
             onSignInClicked = {
                 navController.navigate(Routes.Auth.Login.route)
