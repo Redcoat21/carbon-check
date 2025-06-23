@@ -1,5 +1,6 @@
 package com.carbondev.carboncheck.data.repository
 
+import com.carbondev.carboncheck.data.local.datasource.UserLocalDataSource
 import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler
@@ -15,6 +16,7 @@ import javax.inject.Inject
  */
 class UserRepositoryRemoteImplementation @Inject constructor(
     private val remote: UserRemoteDataSource,
+    private val local: UserLocalDataSource,
     private val errorHandler: ErrorHandler
 ) :
     UserRepository {
@@ -28,13 +30,23 @@ class UserRepositoryRemoteImplementation @Inject constructor(
     }
 
     override suspend fun getCurrentUser(): Result<User> {
-        return runCatching { remote.getCurrentUser() }.fold(
+        return runCatching { local.getUser() }.fold(
             onSuccess = {
-                Result.Success(it.toDomainModel())
+                Result.Success(it)
             },
             onFailure = {
                 Timber.e("Error fetching current user: ${it.message}")
-                Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
+                // fetch from remote
+                runCatching { remote.getCurrentUser() }.fold (
+                    onSuccess = {
+                        local.saveUser(it.toDomainModel())
+                        Result.Success(it.toDomainModel())
+                    },
+                    onFailure = {
+                        Timber.e("Error fetching current user from remote: ${it.message}")
+                        Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
+                    }
+                )
             })
     }
 }
