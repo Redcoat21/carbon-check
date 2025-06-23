@@ -26,6 +26,8 @@ timber = "5.0.1"
 constraintlayout = "2.2.1"
 ycharts = "2.1.0"
 junitJunit = "4.12"
+room = "2.7.2"
+ksp = "2.1.21-2.0.1"
 #navigationCompose= "28.9"
 
 [libraries]
@@ -71,8 +73,13 @@ ycharts = { module = "co.yml:ycharts", version.ref = "ycharts" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 #material = { group = "com.google.android.material", name = "material", version = "1.11.0" }
 #androidx-navigation-compose = {group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose"}
+# Room Database
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
