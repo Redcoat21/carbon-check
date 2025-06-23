@@ -41,6 +41,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
@@ -89,8 +91,9 @@ fun ActivityFormPage(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
             ) {
-
+                val isDarkTheme = isSystemInDarkTheme()
                 TabRow(
                     selectedTabIndex = pagerState.currentPage,
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -103,7 +106,12 @@ fun ActivityFormPage(
                                     pagerState.animateScrollToPage(index)
                                 }
                             },
-                            text = { Text(title) }
+                            text = {
+                                Text(
+                                    text = title,
+                                    color = if (isDarkTheme) androidx.compose.ui.graphics.Color.White else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         )
                     }
                 }
@@ -177,7 +185,7 @@ fun CarActivityForm(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            Text("Log Car Ride", style = MaterialTheme.typography.titleMedium)
+            Text("Log Car Ride", modifier = Modifier.padding(top = 4.dp), style = MaterialTheme.typography.titleMedium)
 
             OutlinedTextField(
                 value = distanceKm,
@@ -185,7 +193,7 @@ fun CarActivityForm(
                 label = { Text("Distance (km)") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 4.dp)
             )
 
             ExposedDropdownMenuBox(
@@ -202,6 +210,7 @@ fun CarActivityForm(
                     modifier = Modifier
                         .fillMaxWidth()
                         .menuAnchor()
+                        .padding(top = 4.dp, bottom = 4.dp)
                 )
 
                 ExposedDropdownMenu(
@@ -252,7 +261,7 @@ fun FlightActivityForm(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            Text("Log Flight", style = MaterialTheme.typography.titleMedium)
+            Text("Log Flight", modifier = Modifier.padding(top = 4.dp), style = MaterialTheme.typography.titleMedium)
 
             OutlinedTextField(
                 value = departureCode,
@@ -260,7 +269,7 @@ fun FlightActivityForm(
                 label = { Text("Departure Airport (IATA Code)") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Ascii),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 4.dp)
             )
 
             OutlinedTextField(
@@ -269,7 +278,7 @@ fun FlightActivityForm(
                 label = { Text("Arrival Airport (IATA Code)") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Ascii),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 4.dp)
             )
 
             OutlinedTextField(
@@ -278,7 +287,7 @@ fun FlightActivityForm(
                 label = { Text("People on Plane") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 4.dp)
             )
         }
         Button(
@@ -317,6 +326,7 @@ fun FoodActivityForm(
         ) {
             Text(
                 text = "Log Food Consumption",
+                modifier = Modifier.padding(top = 4.dp),
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -328,7 +338,7 @@ fun FoodActivityForm(
                 label = { Text("Weight (grams)") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 4.dp)
             )
 
             ExposedDropdownMenuBox(
@@ -343,7 +353,7 @@ fun FoodActivityForm(
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = foodTypeExpanded)
                     },
-                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                    modifier = Modifier.menuAnchor().fillMaxWidth().padding(top = 4.dp, bottom = 4.dp)
                 )
                 ExposedDropdownMenu(
                     expanded = foodTypeExpanded,
