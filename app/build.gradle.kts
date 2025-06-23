@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     kotlin("plugin.serialization") version "2.1.21"
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.google.devtools.ksp)
     id("com.google.dagger.hilt.android")
 }
 android {
@@ -110,5 +110,11 @@ dependencies {
     implementation(libs.ycharts)
 
 //    implementation(libs.androidx.navigation.compose)
+
+    // Room dependencies
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    androidTestImplementation(libs.androidx.room.testing)
 }
 
