@@ -3,7 +3,9 @@ package com.carbondev.carboncheck.presentation.content.screen
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -12,6 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,56 +70,161 @@ fun ProfilePage(
 
 @Composable
 fun ProfilePageContent(profileData: ProfileUiState) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(bottom = 100.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.75f),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
+        item {
+            Card(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = if (profileData.avatarUrl.isNotBlank()) profileData.avatarUrl
-                        else "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                    ),
-                    contentDescription = "User Avatar",
+                Column(
                     modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = if (profileData.avatarUrl.isNotBlank()) profileData.avatarUrl
+                            else "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        ),
+                        contentDescription = "User Avatar",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = "${profileData.firstName} ${profileData.lastName}".trim(),
-                    style = Typography.titleLarge
-                )
+                    Text(
+                        text = "${profileData.firstName} ${profileData.lastName}".trim(),
+                        style = Typography.titleLarge
+                    )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = profileData.email,
-                    style = Typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    Text(
+                        text = profileData.email,
+                        style = Typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
+        }
+
+        item {
+            Text(
+                text = "My Vouchers",
+                style = Typography.titleMedium,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            )
+        }
+
+        //            items(profileData.vouchers) { voucher ->
+//                VoucherCardOwned(
+//                    name = voucher.name,
+//                    vendor = voucher.vendor,
+//                    amount = voucher.amount
+//                )
+//            }
+
+        items(3) {
+            VoucherCardOwned(
+                name = "halo",
+                vendor = "vendor",
+                amount = 15
+            )
         }
     }
 }
+
+@Composable
+fun VoucherCardOwned(
+    name: String,
+    vendor: String,
+    amount: Int,
+    onUseClick: () -> Unit = {}
+) {
+    var showDialog by remember { mutableStateOf(false) }
+    var used by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(text = name, style = MaterialTheme.typography.titleMedium)
+            Text(text = "Vendor: $vendor", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Amount: $amount", style = MaterialTheme.typography.bodyMedium)
+
+            Button(
+                onClick = { showDialog = true },
+                enabled = amount > 0
+            ) {
+                Text("Use")
+            }
+        }
+    }
+
+    if (showDialog) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "Use Voucher?") },
+            text = { Text(text = "Are you sure you want to use $name from $vendor?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog = false
+                        used = true
+                        onUseClick() // Trigger logic, likely reduces amount via ViewModel
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    if (used) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { used = false },
+            title = { Text(text = "Voucher used!") },
+            text = { Text(text = "Here is you code: hehe") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        used = false
+                    }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+}
+
+
 
 @Composable
 private fun ErrorText(message: String) {

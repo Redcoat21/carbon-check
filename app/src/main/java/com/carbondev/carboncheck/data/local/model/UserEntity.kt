@@ -3,6 +3,7 @@ package com.carbondev.carboncheck.data.local.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carbondev.carboncheck.domain.model.User
+import kotlinx.datetime.Instant
 
 @Entity(tableName = "user_profile")
 data class UserEntity(
@@ -11,7 +12,9 @@ data class UserEntity(
     val firstName: String,
     val lastName: String,
     val avatarUrl: String,
-    val email: String
+    val points: Int,
+    val email: String,
+    val createdAt: Long
 )
 
 fun UserEntity.toDomainModel(): User {
@@ -20,7 +23,9 @@ fun UserEntity.toDomainModel(): User {
         firstName = firstName,
         lastName = lastName,
         avatarUrl = avatarUrl,
-        email = email
+        points = points,
+        email = email,
+        createdAt = Instant.fromEpochMilliseconds(createdAt)
     )
 }
 
@@ -30,6 +35,8 @@ fun User.toEntity(): UserEntity {
         firstName = firstName,
         lastName = lastName,
         avatarUrl = avatarUrl,
-        email = email
+        points = points,
+        email = email,
+        createdAt = createdAt.toEpochMilliseconds()
     )
 }

@@ -5,4 +5,5 @@ data class Voucher(
     val vendor: Vendor,
     val name: String,
     val amount: Int,
+    val points: Int
 )
