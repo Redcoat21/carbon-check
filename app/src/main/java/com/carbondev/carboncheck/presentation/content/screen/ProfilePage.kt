@@ -156,33 +156,71 @@ fun VoucherCardOwned(
     amount: Int,
     onUseClick: () -> Unit = {}
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     var used by remember { mutableStateOf(false) }
 
-    if (!used) {
-        Card(
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(text = name, style = MaterialTheme.typography.titleMedium)
-                Text(text = "Vendor: $vendor", style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Amount: $amount", style = MaterialTheme.typography.bodyMedium)
+            Text(text = name, style = MaterialTheme.typography.titleMedium)
+            Text(text = "Vendor: $vendor", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Amount: $amount", style = MaterialTheme.typography.bodyMedium)
 
-                Button(
-                    onClick = {
-                        used = true
-                        onUseClick()
-                    },
-                ) {
-                    Text("Use")
-                }
+            Button(
+                onClick = { showDialog = true },
+                enabled = amount > 0
+            ) {
+                Text("Use")
             }
         }
+    }
+
+    if (showDialog) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "Use Voucher?") },
+            text = { Text(text = "Are you sure you want to use $name from $vendor?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog = false
+                        used = true
+                        onUseClick() // Trigger logic, likely reduces amount via ViewModel
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    if (used) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { used = false },
+            title = { Text(text = "Voucher used!") },
+            text = { Text(text = "Here is you code: hehe") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        used = false
+                    }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
 
