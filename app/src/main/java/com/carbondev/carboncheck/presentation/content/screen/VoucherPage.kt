@@ -1,5 +1,6 @@
 package com.carbondev.carboncheck.presentation.content.screen
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,12 +31,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.carbondev.carboncheck.domain.model.Vendor
+import com.carbondev.carboncheck.domain.model.Voucher
+import com.carbondev.carboncheck.presentation.common.UiState
+import com.carbondev.carboncheck.presentation.content.viewmodel.VoucherViewModel
 
 @Composable
 fun VoucherPage(
     modifier: Modifier = Modifier,
-    currentPoints: Int = 120 // You can pass this from your ViewModel later
+    currentPoints: Int = 120, // You can pass this from your ViewModel later
+    viewModel: VoucherViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -52,40 +62,50 @@ fun VoucherPage(
             )
         }
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 100.dp),
-        ) {
-            items(sampleVouchers) { voucher ->
-                VoucherCard(
-                    name = voucher.name,
-                    vendor = voucher.vendor,
-                    amount = voucher.amount,
-                    pointsRequired = voucher.pointsRequired,
-                    currentPoints = currentPoints,
-                )
+        when (val state = uiState) {
+            is UiState.Loading -> {
+                Text("Loading vouchers...")
+            }
+
+            is UiState.Error -> {
+                Text("Error: ${state.message}")
+            }
+
+            is UiState.Success<*> -> {
+                val voucherList = (state.data as? List<Voucher>).orEmpty()
+//                Log.d("test", voucherList.get(0).id)
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 100.dp),
+                ) {
+                    items(voucherList) { voucher ->
+                        VoucherCard(
+                            name = voucher.name,
+                            vendor = voucher.vendor.name,
+                            amount = voucher.amount,
+                            pointsRequired = voucher.points,
+                            currentPoints = currentPoints,
+                        )
+                    }
+                }
+            }
+
+            is UiState.Empty -> {
+                Text("No vouchers available.")
             }
         }
-
     }
 }
 
-data class Voucher(
-    val name: String,
-    val vendor: String,
-    val amount: Int,
-    val pointsRequired: Int
-)
-
 val sampleVouchers = listOf(
-    Voucher("40% Food Coupon", "McDonald's", 3, 100),
-    Voucher("Free Coffee", "Starbucks", 0, 50),
-    Voucher("Buy 1 Get 1", "Starbucks", 5, 200),
-    Voucher("Free 2 Ice Cream", "Mixue", 0, 150),
-    Voucher("Free Fries", "KFC", 10, 80),
-    Voucher("Discount Pizza", "Pizza Hut", 2, 120),
+    Voucher("0", Vendor("0","McDonald's"), "40% Food Coupon", 3, 100),
+    Voucher("1", Vendor("1","Starbuck"),"Free Coffee", 0, 50),
+    Voucher("2", Vendor("1","Starbuck"), "Buy 1 Get 1", 5, 200),
+    Voucher("3", Vendor("2", "Mixue"), "Free 2 Ice Cream", 0, 150),
+    Voucher("4", Vendor("3", "KFC"), "Free Fries", 10, 80),
+    Voucher("5", Vendor("4", "Pizza Hut"), "Discount Pizza", 2, 120),
 )
 
 
