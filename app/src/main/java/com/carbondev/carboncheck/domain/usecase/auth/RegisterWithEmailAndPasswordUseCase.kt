@@ -25,7 +25,13 @@ class RegisterWithEmailAndPasswordUseCase @Inject constructor(
         }
     }
 
-    suspend operator fun invoke(email: String, password: String, confirmPassword: String, firstName: String, lastName: String): Result<Unit> {
+    suspend operator fun invoke(
+        email: String,
+        password: String,
+        confirmPassword: String,
+        firstName: String,
+        lastName: String
+    ): Result<Unit> {
         if (email.isBlank()) {
             val exception = IllegalArgumentException("Email cannot be blank")
             return Result.Error(

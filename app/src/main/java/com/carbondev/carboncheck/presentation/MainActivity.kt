@@ -5,6 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.carbondev.carboncheck.presentation.navbar.screen.MainScreen
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,8 +19,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CarbonCheckTheme {
-                NavigationComponent()
-//                MainScreen()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    NavigationComponent()
+                }
             }
         }
     }
