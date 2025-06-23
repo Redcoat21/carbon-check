@@ -1,9 +1,11 @@
 package com.carbondev.carboncheck.di
 
+import com.carbondev.carboncheck.data.repository.ActivityRepositoryImplementation
 import com.carbondev.carboncheck.data.repository.AuthRepositoryImplementation
 import com.carbondev.carboncheck.data.repository.UserRepositoryRemoteImplementation
 import com.carbondev.carboncheck.data.repository.VendorRepositoryRemoteImplementation
 import com.carbondev.carboncheck.data.repository.VoucherRepositoryImplementation
+import com.carbondev.carboncheck.domain.repository.ActivityRepository
 import com.carbondev.carboncheck.domain.repository.AuthRepository
 import com.carbondev.carboncheck.domain.repository.UserRepository
 import com.carbondev.carboncheck.domain.repository.VendorRepository
@@ -38,6 +40,12 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideAuthRepository(impl: AuthRepositoryImplementation): AuthRepository {
+        return impl
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityRepository(impl: ActivityRepositoryImplementation): ActivityRepository {
         return impl
     }
 }

@@ -3,6 +3,7 @@ package com.carbondev.carboncheck.di
 import android.content.Context
 import androidx.room.Room
 import com.carbondev.carboncheck.data.local.AppDatabase
+import com.carbondev.carboncheck.data.local.dao.ActivityDao
 import com.carbondev.carboncheck.data.local.datasource.UserLocalDataSource
 import com.carbondev.carboncheck.data.local.dao.UserDao
 import dagger.Binds
@@ -24,12 +25,20 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             "carbon_check_db"
-        ).build()
+        )
+        .fallbackToDestructiveMigration(false)
+        .build()
     }
 
     @Provides
     @Singleton
     fun provideUserDao(appDatabase: AppDatabase): UserDao {
         return appDatabase.userDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityDao(appDatabase: AppDatabase): ActivityDao {
+        return appDatabase.activityDao()
     }
 }

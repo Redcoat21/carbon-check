@@ -9,6 +9,7 @@ data class User(
     val firstName: String,
     val lastName: String,
     val avatarUrl: String,
+    val points: Int,
     val email: String,
     val createdAt: Instant
 ) {
