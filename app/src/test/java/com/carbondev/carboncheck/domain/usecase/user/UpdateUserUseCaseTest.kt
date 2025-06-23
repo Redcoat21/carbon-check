@@ -36,7 +36,8 @@ class UpdateUserUseCaseTest {
             lastName = "Doe",
             email = "john.doe@example.com",
             avatarUrl = "https://example.com/avatar.jpg",
-            createdAt = Clock.System.now()
+            createdAt = Clock.System.now(),
+            points = 100
         )
         val updatedUser = user.copy(firstName = "Updated", lastName = "Name")
         coEvery { mockUserRepository.updateUser(userId, updatedUser) } returns Result.Success(updatedUser)
@@ -59,7 +60,8 @@ class UpdateUserUseCaseTest {
             lastName = "Doe",
             email = "john.doe@example.com",
             avatarUrl = "https://example.com/avatar.jpg",
-            createdAt = Clock.System.now()
+            createdAt = Clock.System.now(),
+            points = 100
         )
         val exception = RuntimeException("Network error")
         coEvery { mockUserRepository.updateUser(userId, user) } returns Result.Error(

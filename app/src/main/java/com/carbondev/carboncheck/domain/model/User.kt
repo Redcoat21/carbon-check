@@ -11,7 +11,7 @@ data class User(
     val avatarUrl: String,
     val points: Int,
     val email: String,
-    val createdAt: Instant
+    val createdAt: Instant,
 ) {
     val name: String get() = "$firstName $lastName".trim()
 
@@ -23,7 +23,8 @@ data class User(
             avatarUrl = avatarUrl,
             email = email,
             createdAt = createdAt,
-            updatedAt = Clock.System.now()
+            updatedAt = Clock.System.now(),
+            points = points
         )
     }
 }
