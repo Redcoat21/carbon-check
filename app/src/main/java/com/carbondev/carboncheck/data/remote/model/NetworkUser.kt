@@ -46,7 +46,8 @@ data class NetworkUser(
             firstName = firstName,
             lastName = lastName,
             avatarUrl = avatarUrl ?: "",
-            email = email
+            email = email,
+            createdAt = createdAt
         )
     }
 }
