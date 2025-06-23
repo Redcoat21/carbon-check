@@ -20,4 +20,11 @@ interface AuthRepository {
      * @return A result indicating success or failure of the registration operation.
      */
     suspend fun registerWithEmail(email: String, password: String): Result<Unit>
+
+    /**
+     * Logs out the currently authenticated user.
+     * This operation clears the user's session and any stored authentication tokens.
+     * @return A result indicating success or failure of the logout operation.
+     */
+    suspend fun logout(): Result<Unit>
 }

@@ -11,6 +11,7 @@ interface UserLocalDataSource {
     suspend fun saveUser(user: User)
     suspend fun getUser(): User
     suspend fun clearUser()
+    suspend fun deleteUser()
 }
 
 class UserLocalDataSourceImplementation @Inject constructor(
@@ -27,6 +28,9 @@ class UserLocalDataSourceImplementation @Inject constructor(
     }
 
     override suspend fun clearUser() {
+      userDao.clearUser()
+    }
+    override suspend fun deleteUser() {
         userDao.clearUser()
     }
 }
