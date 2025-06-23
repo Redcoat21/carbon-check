@@ -1,6 +1,9 @@
 package com.carbondev.carboncheck.presentation.content.viewmodel
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Fastfood
+import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
@@ -68,11 +71,9 @@ class HomeViewModel @Inject constructor(
         // This function simulates fetching recent activities from a repository.
         // It now uses the helper function to create CarbonData.
         return listOf(
-            Activity(Icons.Default.Home, "Flight to Bali", "6:00 am • 2 hours", createCarbonDataFromKg(150.0)),
-            Activity(Icons.Default.Home, "Morning commute", "8:30 am • 25 minutes", createCarbonDataFromKg(6.1)),
-            Activity(Icons.Default.Home, "Lunch (Steak)", "12:15 pm • 45 minutes", createCarbonDataFromKg(7.5)),
-            Activity(Icons.Default.Home, "Bike ride home", "5:00 pm • 30 minutes", createCarbonDataFromKg(0.1)),
-            Activity(Icons.Default.Home, "Evening walk", "7:30 pm • 15 minutes", createCarbonDataFromKg(0.0))
+            Activity(Icons.Default.Flight, "Flight to Bali", "6:00 am • 2 hours", createCarbonDataFromKg(150.0)),
+            Activity(Icons.Default.DirectionsCar, "Travel to Work", "8:30 am • 25 minutes", createCarbonDataFromKg(6.1)),
+            Activity(Icons.Default.Fastfood, "Lunch (Steak)", "12:15 pm • 45 minutes", createCarbonDataFromKg(7.5)),
         )
     }
 
