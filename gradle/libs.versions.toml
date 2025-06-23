@@ -25,6 +25,7 @@ hiltNavigationCompose = "1.2.0"
 timber = "5.0.1"
 constraintlayout = "2.2.1"
 ycharts = "2.1.0"
+junitJunit = "4.12"
 #navigationCompose= "28.9"
 
 [libraries]
@@ -67,6 +68,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 ycharts = { module = "co.yml:ycharts", version.ref = "ycharts" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 #material = { group = "com.google.android.material", name = "material", version = "1.11.0" }
 #androidx-navigation-compose = {group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose"}
 [plugins]
