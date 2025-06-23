@@ -178,7 +178,6 @@ fun VoucherCardOwned(
                         used = true
                         onUseClick()
                     },
-                    modifier = Modifier.align(Alignment.End)
                 ) {
                     Text("Use")
                 }
