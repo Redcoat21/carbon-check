@@ -17,28 +17,77 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.carbondev.carboncheck.R
+import com.carbondev.carboncheck.domain.usecase.auth.LogoutUseCase
 import com.carbondev.carboncheck.presentation.Routes
+import com.carbondev.carboncheck.presentation.auth.screen.LoginScreenContent
+import com.carbondev.carboncheck.presentation.auth.viewmodel.LoginViewModel
+import com.carbondev.carboncheck.presentation.common.UiStateHandler
+import com.carbondev.carboncheck.presentation.content.viewmodel.LogoutViewModel
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
 
 @Composable
-fun SettingsPage(navController: NavHostController) {
-    SettingsPageContent(
-        onEditProfileClick = {
-            println("Edit profile clicked")
-            navController.navigate(Routes.ProfileEdit.route)
-        },
-        onAboutClick = {
-            println("About clicked")
-            navController.navigate(Routes.About.route)
-        },
-        onLogoutClick = {
-            println("Logout clicked")
+fun SettingsPage(
+    navController: NavHostController,
+    logoutViewModel: LogoutViewModel = hiltViewModel()
+) {
+    UiStateHandler(
+        viewModel = logoutViewModel,
+        onSuccess = {
+            navController.popBackStack(Routes.Home.route, inclusive = true)
             navController.navigate(Routes.Auth.Login.route)
         }
-    )
+    ) {
+        SettingsPageContent(
+            onEditProfileClick = {
+                navController.navigate(Routes.ProfileEdit.route)
+            },
+            onAboutClick = {
+                navController.navigate(Routes.About.route)
+            },
+            onLogoutClick = {
+                logoutViewModel.logout()
+            }
+        )
+    }
 }
+
+//@Composable
+//fun SettingsPage(
+//    navController: NavHostController,
+//    logoutViewModel: LogoutViewModel = hiltViewModel<LogoutViewModel>()
+//) {
+//    SettingsPageContent(
+//        onEditProfileClick = {
+//            println("Edit profile clicked")
+//            navController.navigate(Routes.ProfileEdit.route)
+//        },
+//        onAboutClick = {
+//            println("About clicked")
+//            navController.navigate(Routes.About.route)
+//        },
+//        onLogoutClick = {
+//            println("Logout clicked")
+//
+//            navController.navigate(Routes.Auth.Login.route)
+//        }
+//    )
+//}
+
+//UiStateHandler(
+//viewModel = viewModel,
+//onSuccess = {
+//    navController.popBackStack(Routes.Auth.Welcome.route, inclusive = false)
+//    navController.navigate(Routes.Home.route)
+//}) {
+//    LoginScreenContent(onSignInClicked = { email, password ->
+//        viewModel.login(email = email, password = password)
+//    }, onSignUpClicked = {
+//        navController.navigate(Routes.Auth.Register.route)
+//    })
+//}
 
 @Composable
 fun SettingsPageContent(
