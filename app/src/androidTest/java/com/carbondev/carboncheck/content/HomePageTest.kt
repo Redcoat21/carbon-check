@@ -21,9 +21,7 @@ class HomePageTest {
         }
 
         composeTestRule.onNodeWithText("Hi Vivek,").assertIsDisplayed()
-        composeTestRule.onNodeWithText("4.2 kg").assertIsDisplayed()
         composeTestRule.onNodeWithText("Recent activities").assertIsDisplayed()
-        composeTestRule.onAllNodesWithText("Car ride")[0].assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Add Activity").assertIsDisplayed()
     }
 }

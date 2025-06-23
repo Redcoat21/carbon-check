@@ -31,20 +31,16 @@ class ProfilePageTest {
             }
         }
 
-        // Optional: wait for any image loading or recomposition
         composeTestRule.waitForIdle()
 
-        // Ensure avatar contentDescription is correct in the actual Composable
         composeTestRule.onNodeWithContentDescription("User Avatar")
             .assertExists()
             .assertIsDisplayed()
 
-        // Check name
         composeTestRule.onNodeWithText("John Doe")
             .assertExists()
             .assertIsDisplayed()
 
-        // Check email
         composeTestRule.onNodeWithText("johndoe@example.com")
             .assertExists()
             .assertIsDisplayed()
