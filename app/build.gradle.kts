@@ -61,6 +61,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -105,5 +106,9 @@ dependencies {
 
     // Konform dependencies for validation
     implementation(libs.konform.jvm)
+
+    implementation(libs.ycharts)
+
+//    implementation(libs.androidx.navigation.compose)
 }
 
