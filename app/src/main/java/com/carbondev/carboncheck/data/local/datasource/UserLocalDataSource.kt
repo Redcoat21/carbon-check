@@ -8,6 +8,7 @@ import jakarta.inject.Inject
 
 interface UserLocalDataSource {
     suspend fun saveUser(user: User)
+    suspend fun deleteUser()
 }
 
 class UserLocalDataSourceImplementation @Inject constructor(
@@ -16,5 +17,9 @@ class UserLocalDataSourceImplementation @Inject constructor(
 
     override suspend fun saveUser(user: User) {
         userDao.saveUser(user.toEntity())
+    }
+
+    override suspend fun deleteUser() {
+        userDao.clearUser()
     }
 }
