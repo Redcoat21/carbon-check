@@ -11,6 +11,7 @@ data class UserEntity(
     val firstName: String,
     val lastName: String,
     val avatarUrl: String,
+    val points: Int,
     val email: String
 )
 
@@ -20,6 +21,7 @@ fun UserEntity.toDomainModel(): User {
         firstName = firstName,
         lastName = lastName,
         avatarUrl = avatarUrl,
+        points = points,
         email = email
     )
 }
@@ -30,6 +32,7 @@ fun User.toEntity(): UserEntity {
         firstName = firstName,
         lastName = lastName,
         avatarUrl = avatarUrl,
+        points = points,
         email = email
     )
 }
