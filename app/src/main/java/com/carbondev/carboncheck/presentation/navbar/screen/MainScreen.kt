@@ -26,6 +26,7 @@ import com.carbondev.carboncheck.presentation.auth.viewmodel.LoginViewModel
 import com.carbondev.carboncheck.presentation.content.screen.HomePage
 import com.carbondev.carboncheck.presentation.content.screen.ProfilePage
 import com.carbondev.carboncheck.presentation.content.screen.SettingsPage
+import com.carbondev.carboncheck.presentation.content.screen.SettingsPageContent
 import com.carbondev.carboncheck.presentation.content.screen.StatsPage
 import com.carbondev.carboncheck.presentation.content.screen.VoucherPage
 import com.carbondev.carboncheck.presentation.navbar.NavItem
@@ -99,6 +100,6 @@ fun ContentScreen(
         1 -> StatsPage()
         2 -> ProfilePage()
         3 -> VoucherPage()
-        4 -> SettingsPage()
+        4 -> SettingsPage(navController = navController)
     }
 }

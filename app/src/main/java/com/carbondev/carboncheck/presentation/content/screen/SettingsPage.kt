@@ -3,11 +3,13 @@ package com.carbondev.carboncheck.presentation.content.screen
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,12 +17,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.carbondev.carboncheck.R
+import com.carbondev.carboncheck.presentation.Routes
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
-import androidx.compose.foundation.isSystemInDarkTheme
 
 @Composable
-fun SettingsPage(
+fun SettingsPage(navController: NavHostController) {
+    SettingsPageContent(
+        onEditProfileClick = {
+            println("Edit profile clicked")
+            navController.navigate(Routes.ProfileEdit.route)
+        },
+        onAboutClick = {
+            println("About clicked")
+            navController.navigate(Routes.About.route)
+        },
+        onLogoutClick = {
+            println("Logout clicked")
+            navController.navigate(Routes.Auth.Login.route)
+        }
+    )
+}
+
+@Composable
+fun SettingsPageContent(
     modifier: Modifier = Modifier,
     onEditProfileClick: () -> Unit = {},
     onAboutClick: () -> Unit = {},
@@ -56,7 +77,7 @@ fun SettingsPage(
             iconTint = defaultIconTint,
             textColor = MaterialTheme.colorScheme.onSurface
         )
-        Divider()
+        HorizontalDivider()
 
         SettingItem(
             iconRes = R.drawable.baseline_info_outline_24,
@@ -65,7 +86,7 @@ fun SettingsPage(
             iconTint = defaultIconTint,
             textColor = MaterialTheme.colorScheme.onSurface
         )
-        Divider()
+        HorizontalDivider()
 
         SettingItem(
             iconRes = R.drawable.outline_logout_24_red,
@@ -74,7 +95,7 @@ fun SettingsPage(
             iconTint = Color.Red,
             textColor = Color.Red
         )
-        Divider()
+        HorizontalDivider()
     }
 }
 
@@ -112,7 +133,9 @@ fun SettingItem(
 @Composable
 fun SettingsPagePreviewLight() {
     CarbonCheckTheme {
-        SettingsPage()
+        Surface {
+            SettingsPageContent()
+        }
     }
 }
 
@@ -120,7 +143,9 @@ fun SettingsPagePreviewLight() {
 @Composable
 fun SettingsPagePreviewDark() {
     CarbonCheckTheme {
-        SettingsPage()
+        Surface {
+            SettingsPageContent()
+        }
     }
 }
 
@@ -132,7 +157,9 @@ fun SettingsPagePreviewDark() {
 @Composable
 fun SettingsPagePreviewLandscapeLight() {
     CarbonCheckTheme {
-        SettingsPage()
+        Surface {
+            SettingsPageContent()
+        }
     }
 }
 
@@ -145,6 +172,8 @@ fun SettingsPagePreviewLandscapeLight() {
 @Composable
 fun SettingsPagePreviewLandscapeDark() {
     CarbonCheckTheme {
-        SettingsPage()
+        Surface {
+            SettingsPageContent()
+        }
     }
 }
