@@ -1,5 +1,6 @@
 package com.carbondev.carboncheck.data.repository
 
+import com.carbondev.carboncheck.data.local.datasource.UserLocalDataSource
 import com.carbondev.carboncheck.data.remote.model.NetworkUser
 import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
@@ -7,9 +8,11 @@ import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.model.User
 import io.mockk.MockKAnnotations
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -19,6 +22,7 @@ import org.junit.Test
 
 class UserRepositoryTest {
     @MockK private lateinit var mockRemoteDataSource: UserRemoteDataSource
+    @MockK private lateinit var mockLocalDataSource: UserLocalDataSource
     private lateinit var mockErrorHandler: ErrorHandler
     private lateinit var userRepository: UserRepositoryRemoteImplementation
 
@@ -26,7 +30,7 @@ class UserRepositoryTest {
     fun setUp() {
         MockKAnnotations.init(this)
         mockErrorHandler = mockk(relaxed = true)
-        userRepository = UserRepositoryRemoteImplementation(mockRemoteDataSource, mockErrorHandler)
+        userRepository = UserRepositoryRemoteImplementation(mockRemoteDataSource, mockLocalDataSource, mockErrorHandler)
     }
 
     @Test
@@ -76,6 +80,8 @@ class UserRepositoryTest {
         val mockUser = mockk<User>()
         coEvery { mockRemoteDataSource.getCurrentUser() } returns mockNetworkUser
         every { mockNetworkUser.toDomainModel() } returns mockUser
+
+        coEvery { mockLocalDataSource.saveUser(any()) } just Runs
 
         // Act
         val result = userRepository.getCurrentUser()
