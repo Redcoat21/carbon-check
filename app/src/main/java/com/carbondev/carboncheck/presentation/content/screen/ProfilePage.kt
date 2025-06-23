@@ -6,31 +6,65 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.rememberAsyncImagePainter
+import com.carbondev.carboncheck.presentation.common.UiState
+import com.carbondev.carboncheck.presentation.content.viewmodel.ProfileUiState
+import com.carbondev.carboncheck.presentation.content.viewmodel.ProfileViewModel
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
 import com.carbondev.carboncheck.presentation.ui.theme.Typography
 
 @Composable
-fun ProfilePage() {
-    ProfileScreenContent()
+fun ProfilePage(
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        when (val state = uiState) {
+            is UiState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            is UiState.Success<*> -> {
+                val profileData = state.data as? ProfileUiState
+                if (profileData != null) {
+                    ProfilePageContent(profileData = profileData)
+                } else {
+                    ErrorText("An unexpected error occurred.")
+                }
+            }
+
+            is UiState.Error -> {
+                ErrorText(message = state.message)
+            }
+
+            is UiState.Empty -> {
+                ErrorText("No profile data available.")
+            }
+        }
+    }
 }
 
 @Composable
-fun ProfileScreenContent() {
-    val firstName = "John"
-    val lastName = "Doe"
-    val email = "johndoe@example.com"
-    val avatarUrl = "https://i.pravatar.cc/150?img=5"
-
+fun ProfilePageContent(profileData: ProfileUiState) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +86,10 @@ fun ProfileScreenContent() {
                 verticalArrangement = Arrangement.Center
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(avatarUrl),
+                    painter = rememberAsyncImagePainter(
+                        model = if (profileData.avatarUrl.isNotBlank()) profileData.avatarUrl
+                        else "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                    ),
                     contentDescription = "User Avatar",
                     modifier = Modifier
                         .size(120.dp)
@@ -63,14 +100,14 @@ fun ProfileScreenContent() {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "$firstName $lastName",
+                    text = "${profileData.firstName} ${profileData.lastName}".trim(),
                     style = Typography.titleLarge
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = email,
+                    text = profileData.email,
                     style = Typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -78,6 +115,18 @@ fun ProfileScreenContent() {
         }
     }
 }
+
+@Composable
+private fun ErrorText(message: String) {
+    Text(
+        text = message,
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.error,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(16.dp)
+    )
+}
+
 @Preview(
     name = "Light mode - Portrait",
     showBackground = true
@@ -85,7 +134,14 @@ fun ProfileScreenContent() {
 @Composable
 fun ProfileScreenPreviewLight() {
     CarbonCheckTheme {
-        ProfileScreenContent()
+        ProfilePageContent(
+            profileData = ProfileUiState(
+                firstName = "John",
+                lastName = "Doe",
+                avatarUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                email = "johndoe@example.com"
+            )
+        )
     }
 }
 
@@ -97,7 +153,14 @@ fun ProfileScreenPreviewLight() {
 @Composable
 fun ProfileScreenPreviewDark() {
     CarbonCheckTheme {
-        ProfileScreenContent()
+        ProfilePageContent(
+            profileData = ProfileUiState(
+                firstName = "John",
+                lastName = "Doe",
+                avatarUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                email = "johndoe@example.com"
+            )
+        )
     }
 }
 
@@ -109,7 +172,14 @@ fun ProfileScreenPreviewDark() {
 @Composable
 fun ProfileScreenPreviewLandscapeLight() {
     CarbonCheckTheme {
-        ProfileScreenContent()
+        ProfilePageContent(
+            profileData = ProfileUiState(
+                firstName = "John",
+                lastName = "Doe",
+                avatarUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                email = "johndoe@example.com"
+            )
+        )
     }
 }
 
@@ -122,6 +192,13 @@ fun ProfileScreenPreviewLandscapeLight() {
 @Composable
 fun ProfileScreenPreviewLandscapeDark() {
     CarbonCheckTheme {
-        ProfileScreenContent()
+        ProfilePageContent(
+            profileData = ProfileUiState(
+                firstName = "John",
+                lastName = "Doe",
+                avatarUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                email = "johndoe@example.com"
+            )
+        )
     }
 }
