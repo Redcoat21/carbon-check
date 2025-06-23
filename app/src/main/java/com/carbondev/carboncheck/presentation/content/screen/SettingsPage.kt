@@ -36,7 +36,6 @@ fun SettingsPage(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        // Header title
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -72,7 +71,7 @@ fun SettingsPage(
             iconRes = R.drawable.outline_logout_24_red,
             text = "Logout",
             onClick = onLogoutClick,
-            iconTint = Color.Red,  // Always red
+            iconTint = Color.Red,
             textColor = Color.Red
         )
         Divider()

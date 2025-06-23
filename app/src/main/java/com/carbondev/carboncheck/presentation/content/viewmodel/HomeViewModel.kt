@@ -1,69 +1,91 @@
 package com.carbondev.carboncheck.presentation.content.viewmodel
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.viewModelScope
+import com.carbondev.carboncheck.domain.common.ErrorType // Using your provided ErrorType
+import com.carbondev.carboncheck.domain.common.Result // Using your provided Result
+import com.carbondev.carboncheck.domain.model.Activity
+import com.carbondev.carboncheck.domain.model.CarbonData
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Flight
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.lifecycle.ViewModel
-import com.carbondev.carboncheck.domain.model.Activity
-import com.carbondev.carboncheck.domain.model.CarbonData
+//import com.carbondev.carboncheck.domain.usecase.activity.GetRecentActivitiesUseCase
+import com.carbondev.carboncheck.domain.usecase.user.GetCurrentUserUseCase
+import com.carbondev.carboncheck.presentation.common.UiState
+import com.carbondev.carboncheck.presentation.common.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// The UI state now holds a CarbonData object for the daily total.
+// HomeUiState remains the same
 data class HomeUiState(
     val userName: String = "",
     val todaysCo2: CarbonData = CarbonData(),
-    val dailyTarget: Float = 5.6f, // Target remains a float in kg
-    val recentActivities: List<Activity> = emptyList(),
-    val isLoading: Boolean = true
+    val dailyTarget: Float = 5.6f,
+    val recentActivities: List<Activity> = emptyList()
 )
-
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    // Inject your use cases here, e.g.,
-    // private val getUserProfileUseCase: GetUserProfileUseCase,
-    // private val getCarbonHistoryUseCase: GetCarbonHistoryUseCase
-) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(HomeUiState())
-    val uiState = _uiState.asStateFlow()
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+//    private val getRecentActivitiesUseCase: GetRecentActivitiesUseCase
+) : BaseViewModel() {
 
     init {
-        // In a real app, you would launch a coroutine to fetch data from your repository
         loadData()
     }
 
-    private fun loadData() {
-        // This is where you would call your use cases to get real data.
-        _uiState.update {
-            val sampleActivities = getSampleActivities()
-            // Calculate the initial total CO2 by summing up the CarbonData of each activity.
-            val totalCo2 = sampleActivities.fold(CarbonData()) { acc, activity ->
-                acc + activity.carbon
-            }
-            it.copy(
-                userName = "Vivek", // Fetched from user profile
-                todaysCo2 = totalCo2,
-                recentActivities = sampleActivities,
-                isLoading = false
-            )
-        }
-    }
+    fun loadData() = viewModelScope.launch {
+        setLoading()
 
-    // Helper function to create a fully populated CarbonData object from a single kilogram value.
-    private fun createCarbonDataFromKg(kg: Double): CarbonData {
-        return CarbonData(
-            gram = kg * 1000,
-            kilogram = kg,
-            pound = kg * 2.20462,
-            metricTon = kg / 1000
+        // Step 1: Fetch the current user
+        val userResult = getCurrentUserUseCase()
+
+        if (userResult is Result.Error) {
+            // Updated 'when' block to use your specific ErrorType enum
+            val errorMessage = when (userResult.type) {
+                ErrorType.NOT_FOUND_ERROR -> "Your profile could not be found. Please try logging in again."
+                ErrorType.NETWORK_ERROR -> "Please check your internet connection and try again."
+                else -> userResult.message ?: "An unexpected error occurred while loading your profile."
+            }
+            setError(errorMessage)
+            return@launch
+        }
+        
+        val user = (userResult as Result.Success).data
+
+        // Step 2: Fetch recent activities
+//        val activitiesResult = getRecentActivitiesUseCase(user.id)
+//
+//        if (activitiesResult is Result.Error) {
+//            // Updated 'when' block for the second API call
+//            val errorMessage = when (activitiesResult.type) {
+//                ErrorType.NETWORK_ERROR -> "Could not fetch recent activities. Please check your connection."
+//                ErrorType.DATABASE_ERROR -> "There was an issue retrieving your data."
+//                else -> activitiesResult.message ?: "An unexpected error occurred."
+//            }
+//            setError(errorMessage)
+//            return@launch
+//        }
+//
+//        // --- Happy Path ---
+//        val activities = activitiesResult.data
+//        val totalCo2 = activities.fold(CarbonData()) { acc, activity ->
+//            acc + activity.carbon
+//        }
+
+        val sampleActivities = getSampleActivities()
+        val totalCo2 = sampleActivities.fold(CarbonData()) { acc, activity ->
+            acc + activity.carbon
+        }
+
+        setSuccess(
+            HomeUiState(
+                userName = user.name,
+                todaysCo2 = totalCo2,
+                recentActivities = sampleActivities
+            )
         )
     }
 
@@ -77,23 +99,32 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    // This function is now more robust for adding a new activity.
+
+    // `addActivity` and helper functions remain unchanged
     fun addActivity(title: String, time: String, icon: ImageVector, co2InKg: Double) {
-        val newActivity = Activity(
-            icon = icon,
-            title = title,
-            time = time,
-            carbon = createCarbonDataFromKg(co2InKg)
-        )
-
-        _uiState.update { currentState ->
-            val newActivities = listOf(newActivity) + currentState.recentActivities
-            val newTotalCo2 = currentState.todaysCo2 + newActivity.carbon
-
-            currentState.copy(
-                recentActivities = newActivities,
-                todaysCo2 = newTotalCo2
+        val currentState = uiState.value
+        if (currentState is UiState.Success<*>) {
+            val currentData = currentState.data as? HomeUiState ?: return
+            val newActivity = Activity(
+                icon = icon,
+                title = title,
+                time = time,
+                carbon = createCarbonDataFromKg(co2InKg)
             )
+            val newState = currentData.copy(
+                recentActivities = listOf(newActivity) + currentData.recentActivities,
+                todaysCo2 = currentData.todaysCo2 + newActivity.carbon
+            )
+            setSuccess(newState)
         }
+    }
+
+    private fun createCarbonDataFromKg(kg: Double): CarbonData {
+        return CarbonData(
+            gram = kg * 1000,
+            kilogram = kg,
+            pound = kg * 2.20462,
+            metricTon = kg / 1000
+        )
     }
 }
