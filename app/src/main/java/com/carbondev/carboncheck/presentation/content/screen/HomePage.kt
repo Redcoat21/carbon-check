@@ -2,31 +2,17 @@ package com.carbondev.carboncheck.presentation.content.screen
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,73 +22,70 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.carbondev.carboncheck.R
-import androidx.compose.foundation.lazy.items
+import com.carbondev.carboncheck.domain.model.Activity
+import com.carbondev.carboncheck.domain.model.CarbonData
+import com.carbondev.carboncheck.presentation.content.viewmodel.HomeUiState
+import com.carbondev.carboncheck.presentation.content.viewmodel.HomeViewModel
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier) {
-    val sampleActivities = listOf(
-        Activity(Icons.Default.Home, "Car ride", "8:00 pm • 20 minutes", 6f),
-        Activity(Icons.Default.Home, "Walk", "5:30 pm • 15 minutes", 0f),
-        Activity(Icons.Default.Home, "Car ride", "12:00 pm • 10 minutes", 4f),
-        Activity(Icons.Default.Home, "Bike ride", "9:00 am • 30 minutes", 1.2f),
-        Activity(Icons.Default.Home, "Flight", "6:00 am • 2 hours", 150f)
-    )
+fun HomePage(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    // Collect the entire UI state from the ViewModel
+    val uiState by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(vertical = 16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+    // A Box to handle the loading state
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-//        Row (
-//            modifier = modifier
-//            .fillMaxWidth()
-//            .padding(horizontal = 16.dp)
-//        ) {
-//            Column {
-//                Text(
-//                    text = "Hi John Doe, (msh manual)",
-//                    fontSize = 26.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//                Text(
-//                    text = "Track your carbon footprint",
-//                    color = MaterialTheme.colorScheme.primary,
-//                    fontSize = 20.sp,
-//                    fontWeight = FontWeight.SemiBold
-//                )
-//            }
-//        }
-        Welcoming()
+        if (uiState.isLoading) {
+            CircularProgressIndicator()
+        } else {
+            // Main content column
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Welcoming(userName = uiState.userName)
 
-        TodayImpactCard(
-            co2Value = 4.2f,
-            dailyTarget = 5.6f,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
+                TodayImpactCard(
+                    // Pass the entire CarbonData object
+                    carbonData = uiState.todaysCo2,
+                    dailyTarget = uiState.dailyTarget,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
 
-        Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-//        WeeklyProgressHeader(modifier = Modifier.weight(1f))
-        RecentActivitiesList(sampleActivities)
+                RecentActivitiesList(activities = uiState.recentActivities)
+            }
+        }
     }
 }
 
 @Composable
 fun TodayImpactCard(
-    co2Value: Float = 4.2f,
-    dailyTarget: Float = 5.6f,
+    // Updated parameter to accept the CarbonData class
+    carbonData: CarbonData,
+    dailyTarget: Float,
     modifier: Modifier = Modifier
 ) {
-    val progress = (co2Value / dailyTarget).coerceIn(0f, 1f)
+    // Calculate progress using the kilogram value
+    val progress = if (dailyTarget > 0) (carbonData.kilogram.toFloat() / dailyTarget).coerceIn(0f, 1f) else 0f
 
-    Card (
+    Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -111,10 +94,12 @@ fun TodayImpactCard(
         ) {
             Text("Today's Impact", style = MaterialTheme.typography.titleMedium)
             Text(
-                text = "%.1f kg".format(co2Value),
-                style = MaterialTheme.typography.displaySmall.copy(color = Color(0xFF2E7D32))
+                // Display the kilogram value from the CarbonData object
+                text = "%.1f kg".format(carbonData.kilogram),
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.primary
             )
-            Text("CO₂ emissions", style = MaterialTheme.typography.bodySmall.copy(Color.Gray))
+            Text("CO₂ emissions", style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant))
             Spacer(Modifier.height(8.dp))
             LinearProgressIndicator(
                 progress = progress,
@@ -123,11 +108,11 @@ fun TodayImpactCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = MaterialTheme.colorScheme.primary,
-                trackColor = Color(0xFFE0E0E0)
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
             Text(
                 text = "${((1 - progress) * 100).toInt()}% below daily target",
-                style = MaterialTheme.typography.bodySmall.copy(Color.Gray)
+                style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
             )
         }
     }
@@ -136,7 +121,7 @@ fun TodayImpactCard(
 @Composable
 fun Welcoming(
     modifier: Modifier = Modifier,
-    userName: String = "Vivek"
+    userName: String
 ) {
     Column(
         modifier = modifier
@@ -151,7 +136,8 @@ fun Welcoming(
             Column {
                 Text(
                     text = "Hi $userName,",
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = "Track Your Carbon Footprint!",
@@ -169,48 +155,8 @@ fun Welcoming(
     }
 }
 
-@Composable
-fun WeeklyProgressHeader(
-    modifier: Modifier = Modifier,
-    userName: String = "Vivek",
-    currentKg: Float = 120f,
-    weeklyTargetKg: Float = 150f
-) {
-    val progress = (currentKg / weeklyTargetKg).coerceIn(0f, 1f)
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                progress = progress,
-                modifier = Modifier.size(180.dp),
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                strokeWidth = 12.dp
-            )
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "${currentKg.toInt()} kg",
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                Text(
-                    text = "So far this week",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-    }
-}
-
-//=====================================
-
-data class Activity(val icon: ImageVector, val title: String, val time: String, val co2: Float)
+// NOTE: The Activity data class is now imported from the ViewModel file.
+// The local definition has been removed.
 
 @Composable
 fun ActivityRow(item: Activity, modifier: Modifier = Modifier) {
@@ -220,19 +166,20 @@ fun ActivityRow(item: Activity, modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(item.icon, contentDescription = null, modifier = Modifier.size(32.dp))
+        Icon(item.icon, contentDescription = item.title, modifier = Modifier.size(32.dp), tint = MaterialTheme.colorScheme.primary)
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = item.title, style = MaterialTheme.typography.bodyLarge)
-            Text(text = item.time, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            Text(text = item.title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
+            Text(text = item.time, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Text(text = "${item.co2.toInt()} kg CO₂", style = MaterialTheme.typography.bodyMedium)
+        // Display the kilogram value from the item's CarbonData
+        Text(text = "%.1f kg CO₂".format(item.carbon.kilogram), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
 @Composable
 fun RecentActivitiesList(activities: List<Activity>) {
-    LazyColumn (
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 8.dp)
     ) {
@@ -244,7 +191,7 @@ fun RecentActivitiesList(activities: List<Activity>) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Recent activities", style = MaterialTheme.typography.titleMedium)
+                Text("Recent activities", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground)
                 Icon(Icons.Default.AddCircle, contentDescription = "Add", tint = MaterialTheme.colorScheme.primary)
             }
         }
@@ -254,17 +201,70 @@ fun RecentActivitiesList(activities: List<Activity>) {
     }
 }
 
-//====================================================
+//================ PREVIEWS ================
 
+// Helper function to create CarbonData for previews
+private fun createPreviewCarbonData(kg: Double) = CarbonData(kg * 1000, kg, kg * 2.20462, kg / 1000)
 
-@Preview(showBackground = true, name = "HomePage Preview")
+// Updated preview state to use the new data structures
+val previewState = HomeUiState(
+    userName = "Vivek",
+    todaysCo2 = createPreviewCarbonData(4.2),
+    dailyTarget = 5.6f,
+    recentActivities = listOf(
+        Activity(Icons.Default.Home, "Car ride", "8:00 pm • 20 minutes", createPreviewCarbonData(6.0)),
+        Activity(Icons.Default.Home, "Walk", "5:30 pm • 15 minutes", createPreviewCarbonData(0.0)),
+        Activity(Icons.Default.Home, "Car ride", "12:00 pm • 10 minutes", createPreviewCarbonData(4.0))
+    ),
+    isLoading = false
+)
+
+@Preview(showBackground = true, name = "HomePage Preview Light")
 @Composable
-fun HomePagePreview() {
-    HomePage()
+fun HomePagePreviewLight() {
+    MaterialTheme {
+        Surface {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Welcoming(userName = previewState.userName)
+                TodayImpactCard(
+                    carbonData = previewState.todaysCo2,
+                    dailyTarget = previewState.dailyTarget,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                RecentActivitiesList(activities = previewState.recentActivities)
+            }
+        }
+    }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "HomePage Dark")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "HomePage Preview Dark")
 @Composable
 fun HomePagePreviewDark() {
-    HomePage()
+    MaterialTheme(colorScheme = darkColorScheme()) { // Assuming you have a darkColorScheme
+        Surface {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Welcoming(userName = previewState.userName)
+                TodayImpactCard(
+                    carbonData = previewState.todaysCo2,
+                    dailyTarget = previewState.dailyTarget,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                RecentActivitiesList(activities = previewState.recentActivities)
+            }
+        }
+    }
 }

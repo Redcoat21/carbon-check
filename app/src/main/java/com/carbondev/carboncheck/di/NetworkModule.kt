@@ -19,10 +19,12 @@ import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.MoshiSerializer
 import kotlinx.datetime.Instant
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -48,10 +50,22 @@ object NetworkModule {
 
         @FromJson
         override fun fromJson(reader: JsonReader): Instant? {
-            // Read the string value from JSON
+            // Step 1: Check if the upcoming value in the JSON is null
+            if (reader.peek() == JsonReader.Token.NULL) {
+                // Step 2: If it is null, consume it from the reader and return a Kotlin null
+                return reader.nextNull()
+            }
+
+            // Step 3: Only if we get past the null check, we can safely call nextString()
             val instantString = reader.nextString()
-            // Parse the string to an Instant
-            return instantString?.let { Instant.parse(it) }
+
+            // Step 4: Parse the string to an Instant
+            return try {
+                Instant.parse(instantString)
+            } catch (e: Exception) {
+                Timber.w(e, "Could not parse date: $instantString")
+                null // Return null if the string is not a valid Instant
+            }
         }
 
         @ToJson
@@ -105,6 +119,14 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
+            })
+            .addInterceptor(Interceptor { chain ->
+                val original = chain.request()
+                val requestBuilder = original.newBuilder()
+                    .header("Authorization", "Bearer ${BuildConfig.CARBON_INTERFACE_API_KEY}")
+                    .header("Content-Type", "application/json")
+                val request = requestBuilder.build()
+                chain.proceed(request)
             })
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)

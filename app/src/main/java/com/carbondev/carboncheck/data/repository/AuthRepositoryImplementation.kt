@@ -1,5 +1,6 @@
 package com.carbondev.carboncheck.data.repository
 
+import com.carbondev.carboncheck.data.local.datasource.UserLocalDataSource
 import com.carbondev.carboncheck.data.remote.supabase.AuthRemoteDataSource
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler
@@ -9,11 +10,14 @@ import javax.inject.Inject
 
 class AuthRepositoryImplementation @Inject constructor(
     private val remote: AuthRemoteDataSource,
+    private val local: UserLocalDataSource,
     private val errorHandler: ErrorHandler
 ) : AuthRepository {
     override suspend fun loginWithEmail(email: String, password: String): Result<Unit> {
         return runCatching {
-            remote.loginWithEmailAndPassword(email = email, password = password)
+            val user = remote.loginWithEmailAndPassword(email = email, password = password)
+            Timber.tag("Auth").d("User: $user")
+            if (user != null) local.saveUser(user)
         }.fold(onSuccess = {
             Result.Success(Unit)
         }, onFailure = {

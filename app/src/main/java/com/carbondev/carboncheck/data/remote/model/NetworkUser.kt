@@ -12,11 +12,12 @@ data class NetworkUser(
     @Json(name = "last_name") val lastName: String,
     val email: String,
     @Json(name = "created_at") val createdAt: Instant,
-    @Json(name = "updated_at") val updatedAt: Instant,
-    @Json(name = "avatar_url") val avatarUrl: String
+    @Json(name = "updated_at") val updatedAt: Instant?,
+    @Json(name = "avatar_url") val avatarUrl: String?
 ) : RemoteMappable<User> {
     companion object {
-        const val TABLE_NAME = "profiles"
+        const val TABLE_NAME = "users"
+        const val VIEW_NAME = "full_user_profile"
     }
 
     object Columns {
@@ -44,7 +45,7 @@ data class NetworkUser(
             id = id,
             firstName = firstName,
             lastName = lastName,
-            avatarUrl = avatarUrl,
+            avatarUrl = avatarUrl ?: "",
             email = email
         )
     }
