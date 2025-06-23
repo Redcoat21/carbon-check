@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,45 +37,82 @@ fun StatsPage(
     modifier: Modifier = Modifier,
     totalCarbon: Int = 100,
 ) {
-    val slices = listOf(
+    val scrollState = rememberScrollState()
+
+    val weeklySlices = listOf(
         PieChartData.Slice("Transport", 40f, Color(0xFF66BB6A)),
         PieChartData.Slice("Energy", 50f, Color(0xFFEF5350)),
         PieChartData.Slice("Waste", 20f, Color(0xFF42A5F5))
     )
+
+    val monthlySlices = listOf(
+        PieChartData.Slice("Transport", 150.2f, Color(0xFF66BB6A)),
+        PieChartData.Slice("Energy", 120f, Color(0xFFEF5350)),
+        PieChartData.Slice("Waste", 54f, Color(0xFF42A5F5))
+    )
+
+    val yearlySlices = listOf(
+        PieChartData.Slice("Transport", 314.8f, Color(0xFF66BB6A)),
+        PieChartData.Slice("Energy", 302.1f, Color(0xFFEF5350)),
+        PieChartData.Slice("Waste", 117.5f, Color(0xFF42A5F5))
+    )
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item {
+            OurPieChart("weekly", weeklySlices)
+        }
+        item {
+            OurPieChart("monthly", monthlySlices)
+        }
+        item {
+            OurPieChart("yearly", yearlySlices)
+        }
+        item {
+            Spacer(Modifier.height(100.dp))
+        }
+    }
+
+
+}
+
+@Composable
+fun OurPieChart(
+    title: String,
+    slices: List<PieChartData.Slice>
+) {
     val pieData = PieChartData(
         slices = slices,
         plotType = PlotType.Donut,
-        )
+    )
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(Modifier.height(16.dp))
-        Text("Your Weekly Comparison", style = MaterialTheme.typography.titleMedium)
-        Spacer(Modifier.height(12.dp))
-        DonutPieChart(
-            modifier = Modifier.size(400.dp),
-            pieChartData = pieData,
-            pieChartConfig = PieChartConfig(
-                showSliceLabels = false,
-                labelVisible = true,
-                labelType = PieChartConfig.LabelType.VALUE,
-                labelColor = MaterialTheme.colorScheme.primary,
-                isAnimationEnable = true,
-                animationDuration = 800,
-                isSumVisible = true,
-                sumUnit = "Kg",
-                labelFontSize = 50.sp,
-                backgroundColor = MaterialTheme.colorScheme.background
-            )
+    Spacer(Modifier.height(16.dp))
+    Text("Your ${title} Comparison", style = MaterialTheme.typography.titleMedium)
+    Spacer(Modifier.height(12.dp))
+    DonutPieChart(
+        modifier = Modifier.size(400.dp),
+        pieChartData = pieData,
+        pieChartConfig = PieChartConfig(
+            showSliceLabels = false,
+            labelVisible = true,
+            labelType = PieChartConfig.LabelType.VALUE,
+            labelColor = MaterialTheme.colorScheme.primary,
+            isAnimationEnable = true,
+            animationDuration = 800,
+            isSumVisible = true,
+            sumUnit = "Kg",
+            labelFontSize = 50.sp,
+            backgroundColor = MaterialTheme.colorScheme.background
         )
+    )
 
-        Spacer(Modifier.height(16.dp))
-        LegendRow(slices)
-    }
+    Spacer(Modifier.height(16.dp))
+    LegendRow(slices)
 }
 
 @Composable
