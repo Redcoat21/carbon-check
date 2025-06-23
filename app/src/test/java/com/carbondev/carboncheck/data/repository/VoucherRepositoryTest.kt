@@ -1,11 +1,13 @@
 package com.carbondev.carboncheck.data.repository
 
+import com.carbondev.carboncheck.data.remote.model.NetworkUsersVouchers
 import com.carbondev.carboncheck.data.remote.model.NetworkVoucher
 import com.carbondev.carboncheck.data.remote.supabase.VoucherRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.model.Voucher
+import com.carbondev.carboncheck.domain.model.VoucherIdentifier
 import com.carbondev.carboncheck.domain.repository.VoucherRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -61,6 +63,108 @@ class VoucherRepositoryTest {
     }
 
     @Test
+    fun `getVouchers should return vouchers when user identifier is given`() = runTest {
+        // Arrange
+        val userId = "user123"
+        val userIdentifier = VoucherIdentifier.User(userId)
+
+        // Create mock vouchers
+        val expectedVoucher1 = mockk<Voucher>()
+        val expectedVoucher2 = mockk<Voucher>()
+        val expectedVouchers = listOf(expectedVoucher1, expectedVoucher2)
+
+        // Create mock network vouchers
+        val mockNetworkVoucher1 = mockk<NetworkVoucher>()
+        val mockNetworkVoucher2 = mockk<NetworkVoucher>()
+
+        // Create mock user-voucher relationships
+        val mockUserVoucher1 = mockk<NetworkUsersVouchers> {
+            every { voucher } returns mockNetworkVoucher1
+        }
+        val mockUserVoucher2 = mockk<NetworkUsersVouchers> {
+            every { voucher } returns mockNetworkVoucher2
+        }
+        val mockUserVouchers = listOf(mockUserVoucher1, mockUserVoucher2)
+
+        // Configure mocks
+        every { mockNetworkVoucher1.toDomainModel() } returns expectedVoucher1
+        every { mockNetworkVoucher2.toDomainModel() } returns expectedVoucher2
+        coEvery { mockRemoteDataSource.getVouchersByUser(userId) } returns mockUserVouchers
+
+        // Act
+        val result = voucherRepository.getVouchers(userIdentifier)
+
+        // Assert
+        assertTrue(result is Result.Success)
+        assertEquals(expectedVouchers, (result as Result.Success).data)
+    }
+
+    @Test
+    fun `getVouchers should return vouchers when vendor identifier is given`() = runTest {
+        // Arrange
+        val vendorId = "vendor456"
+        val vendorIdentifier = VoucherIdentifier.Vendor(vendorId)
+
+        // Create mock vouchers
+        val expectedVoucher1 = mockk<Voucher>()
+        val expectedVoucher2 = mockk<Voucher>()
+        val expectedVouchers = listOf(expectedVoucher1, expectedVoucher2)
+
+        // Create mock network vouchers
+        val mockNetworkVoucher1 = mockk<NetworkVoucher>()
+        val mockNetworkVoucher2 = mockk<NetworkVoucher>()
+        val mockNetworkVouchers = listOf(mockNetworkVoucher1, mockNetworkVoucher2)
+
+        // Configure mocks
+        every { mockNetworkVoucher1.toDomainModel() } returns expectedVoucher1
+        every { mockNetworkVoucher2.toDomainModel() } returns expectedVoucher2
+        coEvery { mockRemoteDataSource.getVouchersByVendor(vendorId) } returns mockNetworkVouchers
+
+        // Act
+        val result = voucherRepository.getVouchers(vendorIdentifier)
+
+        // Assert
+        assertTrue(result is Result.Success)
+        assertEquals(expectedVouchers, (result as Result.Success).data)
+    }
+
+    @Test
+    fun `getVouchers should handle error when user identifier fetch fails`() = runTest {
+        // Arrange
+        val userId = "invalidUser"
+        val userIdentifier = VoucherIdentifier.User(userId)
+        val expectedException = RuntimeException("Network error")
+
+        coEvery { mockRemoteDataSource.getVouchersByUser(userId) } throws expectedException
+        every { mockErrorHandler.mapToDomainError(expectedException) } returns ErrorType.NETWORK_ERROR
+
+        // Act
+        val result = voucherRepository.getVouchers(userIdentifier)
+
+        // Assert
+        assertTrue(result is Result.Error)
+        assertEquals(ErrorType.NETWORK_ERROR, (result as Result.Error).type)
+    }
+
+    @Test
+    fun `getVouchers should handle error when vendor identifier fetch fails`() = runTest {
+        // Arrange
+        val vendorId = "invalidVendor"
+        val vendorIdentifier = VoucherIdentifier.Vendor(vendorId)
+        val expectedException = RuntimeException("Database error")
+
+        coEvery { mockRemoteDataSource.getVouchersByVendor(vendorId) } throws expectedException
+        every { mockErrorHandler.mapToDomainError(expectedException) } returns ErrorType.DATABASE_ERROR
+
+        // Act
+        val result = voucherRepository.getVouchers(vendorIdentifier)
+
+        // Assert
+        assertTrue(result is Result.Error)
+        assertEquals(ErrorType.DATABASE_ERROR, (result as Result.Error).type)
+    }
+
+    @Test
     fun `getVouchers should return a list of voucher when no identifier is given`() = runTest {
         // Arrange
         val expectedVoucher1 = mockk<Voucher>()
@@ -98,4 +202,3 @@ class VoucherRepositoryTest {
         assertTrue((result as Result.Success).data.isEmpty())
     }
 }
-

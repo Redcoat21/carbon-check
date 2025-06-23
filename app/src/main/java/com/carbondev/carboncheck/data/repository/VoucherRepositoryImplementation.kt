@@ -35,7 +35,10 @@ class VoucherRepositoryImplementation @Inject constructor(
     private suspend fun fetchVouchersByIdentifier(identifier: VoucherIdentifier?): List<NetworkVoucher> {
         return when (identifier) {
             null -> remote.getVouchers()
-            is VoucherIdentifier.User -> emptyList()
+            is VoucherIdentifier.User -> {
+                val result = remote.getVouchersByUser(identifier.userId)
+                result.map { it.voucher }
+            }
             is VoucherIdentifier.Vendor -> remote.getVouchersByVendor(identifier.vendorId)
         }
     }

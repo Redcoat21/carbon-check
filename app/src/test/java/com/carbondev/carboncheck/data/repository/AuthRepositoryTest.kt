@@ -1,5 +1,6 @@
 package com.carbondev.carboncheck.data.repository
 
+import com.carbondev.carboncheck.data.local.datasource.UserLocalDataSource
 import com.carbondev.carboncheck.data.remote.supabase.AuthRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
 import com.carbondev.carboncheck.domain.common.Result
@@ -21,6 +22,8 @@ import org.junit.Test
 class AuthRepositoryTest {
     @MockK
     private lateinit var remote: AuthRemoteDataSource
+    @MockK
+    private lateinit var local: UserLocalDataSource
 
     @MockK
     private lateinit var errorHandler: ErrorHandler
@@ -29,7 +32,8 @@ class AuthRepositoryTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        repository = AuthRepositoryImplementation(remote, errorHandler)
+        local = mockk(relaxed = true)
+        repository = AuthRepositoryImplementation(remote,local, errorHandler)
 
         // Configure errorHandler to handle RestException
         every { errorHandler.mapToDomainError(any<RestException>()) } returns ErrorType.NETWORK_ERROR
@@ -40,7 +44,7 @@ class AuthRepositoryTest {
         // Arrange
         val email = "email@example.com"
         val password = "password123"
-        coJustRun { remote.loginWithEmailAndPassword(email, password) }
+        coEvery { remote.loginWithEmailAndPassword(email, password) } returns mockk(relaxed = true)
         // Act
         val result = repository.loginWithEmail(email, password)
         // Assert
