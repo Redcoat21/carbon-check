@@ -34,4 +34,16 @@ class AuthRepositoryImplementation @Inject constructor(
             Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
         })
     }
+
+    override suspend fun logout(): Result<Unit> {
+        return runCatching {
+            remote.logout()
+        }.fold(onSuccess = {
+            local.deleteUser()
+            Result.Success(Unit)
+        }, onFailure = {
+            Timber.w("Logout failed, error: ${it.message}")
+            Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
+        })
+    }
 }

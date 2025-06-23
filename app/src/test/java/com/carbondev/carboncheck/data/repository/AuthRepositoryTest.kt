@@ -10,6 +10,7 @@ import io.github.jan.supabase.exceptions.RestException
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coJustRun
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
@@ -67,5 +68,35 @@ class AuthRepositoryTest {
         // Assert
         assertTrue(result is Result.Error)
         assertEquals(ErrorType.NETWORK_ERROR, (result as Result.Error).type)
+    }
+
+    @Test
+    fun `logout should return success when logout is successful`() = runTest {
+        // Arrange
+        coJustRun { remote.logout() }
+        coJustRun { local.deleteUser() }
+
+        // Act
+        val result = repository.logout()
+
+        // Assert
+        assertTrue(result is Result.Success)
+        coVerify(exactly = 1) { remote.logout() }
+        coVerify(exactly = 1) { local.deleteUser() }
+    }
+
+    @Test
+    fun `logout should return error when remote logout throws exception`() = runTest {
+        // Arrange
+        val exception = RestException(error = "Logout failed", description = "Network error", response = mockk(relaxed = true))
+        coEvery { remote.logout() } throws exception
+
+        // Act
+        val result = repository.logout()
+
+        // Assert
+        assertTrue(result is Result.Error)
+        assertEquals(ErrorType.NETWORK_ERROR, (result as Result.Error).type)
+        coVerify(exactly = 0) { local.deleteUser() } // Local data should not be cleared if remote logout fails
     }
 }
