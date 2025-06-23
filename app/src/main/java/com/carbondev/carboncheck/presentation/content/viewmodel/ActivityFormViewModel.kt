@@ -111,8 +111,8 @@ class ActivityFormViewModel @Inject constructor(
 
             // Placeholder carbon calculation
             val estimatedCarbon = when (foodType) {
-                "Chicken" -> CarbonData.fromGrams(weight * 27.0)
-                "Beef" -> CarbonData.fromGrams(weight * 6.9)
+                "Chicken" -> CarbonData.fromGrams(weight * 6.9)
+                "Beef" -> CarbonData.fromGrams(weight * 27.0)
                 else -> CarbonData.fromGrams(0.0)
             }
 
