@@ -14,7 +14,7 @@ import com.carbondev.carboncheck.data.local.model.UserEntity
             UserEntity::class,
             ActivityEntity::class
         ],
-    version = 2
+    version = 3
 )
 @TypeConverters(DatabaseConverters::class)
 abstract class AppDatabase : RoomDatabase() {
