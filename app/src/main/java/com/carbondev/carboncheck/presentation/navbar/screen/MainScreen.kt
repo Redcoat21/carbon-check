@@ -80,14 +80,22 @@ fun MainScreen(
             }
         },
     ) { innerPadding ->
-        ContentScreen(modifier = Modifier.padding(innerPadding), selectedIndex)
+        ContentScreen(
+            modifier = Modifier.padding(innerPadding),
+            selectedIndex = selectedIndex,
+            navController = navController // now passed correctly
+        )
     }
 }
 
 @Composable
-fun ContentScreen(modifier: Modifier = Modifier, selectedIndex: Int) {
+fun ContentScreen(
+    modifier: Modifier = Modifier,
+    selectedIndex: Int,
+    navController: NavHostController
+) {
     when(selectedIndex){
-        0 -> HomePage()
+        0 -> HomePage(navController = navController, modifier = modifier)
         1 -> StatsPage()
         2 -> ProfilePage()
         3 -> VoucherPage()

@@ -77,8 +77,6 @@ fun StatsPage(
             Spacer(Modifier.height(100.dp))
         }
     }
-
-
 }
 
 @Composable

@@ -38,9 +38,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.carbondev.carboncheck.R
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.IconButton
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.carbondev.carboncheck.presentation.Routes
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier) {
+fun HomePage(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
     val sampleActivities = listOf(
         Activity(Icons.Default.Home, "Car ride", "8:00 pm • 20 minutes", 6f),
         Activity(Icons.Default.Home, "Walk", "5:30 pm • 15 minutes", 0f),
@@ -86,7 +94,10 @@ fun HomePage(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
 //        WeeklyProgressHeader(modifier = Modifier.weight(1f))
-        RecentActivitiesList(sampleActivities)
+        RecentActivitiesList(
+            activities = sampleActivities,
+            onAddClick = { navController.navigate(Routes.Add.route) }
+        )
     }
 }
 
@@ -231,8 +242,11 @@ fun ActivityRow(item: Activity, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun RecentActivitiesList(activities: List<Activity>) {
-    LazyColumn (
+fun RecentActivitiesList(
+    activities: List<Activity>,
+    onAddClick: () -> Unit
+) {
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 8.dp)
     ) {
@@ -245,14 +259,22 @@ fun RecentActivitiesList(activities: List<Activity>) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("Recent activities", style = MaterialTheme.typography.titleMedium)
-                Icon(Icons.Default.AddCircle, contentDescription = "Add", tint = MaterialTheme.colorScheme.primary)
+                IconButton(onClick = onAddClick) {
+                    Icon(
+                        imageVector = Icons.Default.AddCircle,
+                        contentDescription = "Add Activity",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
+
         items(activities) { activity ->
             ActivityRow(activity)
         }
     }
 }
+
 
 //====================================================
 
@@ -260,11 +282,11 @@ fun RecentActivitiesList(activities: List<Activity>) {
 @Preview(showBackground = true, name = "HomePage Preview")
 @Composable
 fun HomePagePreview() {
-    HomePage()
+    HomePage(navController = rememberNavController())
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "HomePage Dark")
 @Composable
 fun HomePagePreviewDark() {
-    HomePage()
+    HomePage(navController = rememberNavController())
 }
