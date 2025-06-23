@@ -8,9 +8,11 @@ import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.exception.ErrorHandler
 import com.carbondev.carboncheck.domain.model.User
 import io.mockk.MockKAnnotations
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -78,6 +80,8 @@ class UserRepositoryTest {
         val mockUser = mockk<User>()
         coEvery { mockRemoteDataSource.getCurrentUser() } returns mockNetworkUser
         every { mockNetworkUser.toDomainModel() } returns mockUser
+
+        coEvery { mockLocalDataSource.saveUser(any()) } just Runs
 
         // Act
         val result = userRepository.getCurrentUser()
