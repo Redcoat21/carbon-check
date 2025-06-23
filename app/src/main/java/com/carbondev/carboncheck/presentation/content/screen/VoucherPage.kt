@@ -73,7 +73,6 @@ fun VoucherPage(
 
             is UiState.Success<*> -> {
                 val voucherList = (state.data as? List<Voucher>).orEmpty()
-//                Log.d("test", voucherList.get(0).id)
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
