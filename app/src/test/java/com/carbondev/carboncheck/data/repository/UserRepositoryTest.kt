@@ -105,5 +105,51 @@ class UserRepositoryTest {
         assertTrue(result is Result.Error)
         assertEquals(ErrorType.NOT_FOUND_ERROR, (result as Result.Error).type)
     }
-}
 
+    @Test
+    fun `updateUser should return updated user on success`() = runTest {
+        // Arrange
+        val userId = "user123"
+        val mockNetworkUser = mockk<NetworkUser>()
+        val mockUser = mockk<User>()
+        val mockUpdatedUser = mockk<User>()
+
+        // Setup mocks
+        every { mockUser.toNetworkModel() } returns mockNetworkUser
+        every { mockNetworkUser.toDomainModel() } returns mockUpdatedUser
+
+        // Setup datasource behaviors
+        coEvery { mockRemoteDataSource.updateUser(userId, mockNetworkUser) } returns mockNetworkUser
+        coEvery { mockLocalDataSource.deleteUser() } just Runs
+        coEvery { mockLocalDataSource.saveUser(mockUpdatedUser) } just Runs
+
+        // Act
+        val result = userRepository.updateUser(userId, mockUser)
+
+        // Assert
+        assertTrue(result is Result.Success)
+        assertEquals(mockUpdatedUser, (result as Result.Success).data)
+    }
+
+    @Test
+    fun `updateUser should return error when update fails`() = runTest {
+        // Arrange
+        val userId = "user123"
+        val mockUser = mockk<User>()
+        val mockNetworkUser = mockk<NetworkUser>()
+        val expectedException = RuntimeException("Network error")
+
+        // Setup mocks
+        every { mockUser.toNetworkModel() } returns mockNetworkUser
+        coEvery { mockRemoteDataSource.updateUser(userId, mockNetworkUser) } throws expectedException
+        every { mockErrorHandler.mapToDomainError(expectedException) } returns ErrorType.NETWORK_ERROR
+
+        // Act
+        val result = userRepository.updateUser(userId, mockUser)
+
+        // Assert
+        assertTrue(result is Result.Error)
+        assertEquals(ErrorType.NETWORK_ERROR, (result as Result.Error).type)
+        assertEquals(expectedException, result.exception)
+    }
+}

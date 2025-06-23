@@ -37,7 +37,7 @@ class UserRepositoryRemoteImplementation @Inject constructor(
             onFailure = {
                 Timber.e("Error fetching current user: ${it.message}")
                 // fetch from remote
-                runCatching { remote.getCurrentUser() }.fold (
+                runCatching { remote.getCurrentUser() }.fold(
                     onSuccess = {
                         local.saveUser(it.toDomainModel())
                         Result.Success(it.toDomainModel())
@@ -47,6 +47,20 @@ class UserRepositoryRemoteImplementation @Inject constructor(
                         Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
                     }
                 )
+            })
+    }
+
+    override suspend fun updateUser(id: String, newUser: User): Result<User> {
+        return runCatching { remote.updateUser(id = id, newUser = newUser.toNetworkModel()) }.fold(
+            onSuccess = {
+                local.deleteUser()
+                val domainUser = it.toDomainModel()
+                local.saveUser(domainUser)
+                Result.Success(domainUser)
+            },
+            onFailure = {
+                Timber.e("Error updating user $id: ${it.message}")
+                Result.Error(type = errorHandler.mapToDomainError(it), exception = it)
             })
     }
 }

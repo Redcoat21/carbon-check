@@ -19,4 +19,12 @@ interface UserRepository {
      * @return A [Result] containing the current user data or an error.
      */
     suspend fun getCurrentUser(): Result<User>
+
+    /**
+     * Update a user's information.
+     * @param id The ID of the user to update.
+     * @param newUser The new user data to update.
+     * @return A [Result] containing the updated user data or an error.
+     */
+    suspend fun updateUser(id: String, newUser: User): Result<User>
 }

@@ -36,4 +36,13 @@ class UserRemoteDataSource @Inject constructor(private val client: SupabaseClien
             getUser(currentUserInfo?.id ?: throw NoSuchElementException("No current user found"))
         return currentUser
     }
+
+    suspend fun updateUser(id: String, newUser: NetworkUser): NetworkUser {
+        val req = client.from(NetworkUser.TABLE_NAME).update(newUser) {
+            filter {
+                eq(NetworkUser.Columns.ID, id)
+            }
+        }
+        return req.decodeSingle<NetworkUser>()
+    }
 }
