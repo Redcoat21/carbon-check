@@ -2,6 +2,7 @@ package com.carbondev.carboncheck.presentation.content.screen
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,18 +17,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.carbondev.carboncheck.R
+import com.carbondev.carboncheck.presentation.Routes
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
 import com.carbondev.carboncheck.presentation.ui.theme.Typography
 
 @Composable
-fun ProfileEditPage(onBackPressed: () -> Unit = {}) {
-    ProfileEditContent(onBackPressed = onBackPressed)
+fun ProfileEditPage(navController: NavHostController) {
+    ProfileEditContent(
+        onBackClick = {
+            navController.popBackStack()
+        }
+    )
 }
 
 @Composable
-fun ProfileEditContent(onBackPressed: () -> Unit = {}) {
+fun ProfileEditContent(modifier: Modifier = Modifier, onBackClick: () -> Unit = {}) {
     var firstName by remember { mutableStateOf(TextFieldValue("John")) }
     var lastName by remember { mutableStateOf(TextFieldValue("Doe")) }
     var avatarUrl by remember { mutableStateOf(TextFieldValue("https://i.pravatar.cc/150?img=5")) }
@@ -42,12 +49,14 @@ fun ProfileEditContent(onBackPressed: () -> Unit = {}) {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onBackPressed) {
-                Image(
-                    painter = painterResource(id = R.drawable.baseline_arrow_back_24),
-                    contentDescription = "Back Icon"
-                )
-            }
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_arrow_back_24),
+                contentDescription = "Back",
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .size(28.dp)
+                    .clickable { onBackClick() }
+            )
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "Edit Profile",
@@ -127,7 +136,7 @@ fun ProfileEditContent(onBackPressed: () -> Unit = {}) {
 @Composable
 fun ProfileEditLightPreview() {
     CarbonCheckTheme {
-        ProfileEditPage()
+        ProfileEditContent()
     }
 }
 
@@ -135,7 +144,7 @@ fun ProfileEditLightPreview() {
 @Composable
 fun ProfileEditDarkPreview() {
     CarbonCheckTheme {
-        ProfileEditPage()
+        ProfileEditContent()
     }
 }
 
@@ -147,7 +156,7 @@ fun ProfileEditDarkPreview() {
 @Composable
 fun ProfileEditLandscapeLightPreview() {
     CarbonCheckTheme {
-        ProfileEditPage()
+        ProfileEditContent()
     }
 }
 
@@ -160,6 +169,6 @@ fun ProfileEditLandscapeLightPreview() {
 @Composable
 fun ProfileEditLandscapeDarkPreview() {
     CarbonCheckTheme {
-        ProfileEditPage()
+        ProfileEditContent()
     }
 }

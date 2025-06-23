@@ -3,6 +3,7 @@
     import android.content.res.Configuration
     import androidx.compose.foundation.clickable
     import androidx.compose.foundation.layout.*
+    import androidx.compose.material3.Button
     import androidx.compose.material3.Icon
     import androidx.compose.material3.MaterialTheme
     import androidx.compose.material3.Text
@@ -12,12 +13,22 @@
     import androidx.compose.ui.res.painterResource
     import androidx.compose.ui.tooling.preview.Preview
     import androidx.compose.ui.unit.dp
+    import androidx.navigation.NavHostController
     import com.carbondev.carboncheck.R
     import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
     import com.carbondev.carboncheck.presentation.ui.theme.Typography
 
     @Composable
-    fun AboutPage(
+    fun AboutPage(navController: NavHostController) {
+        AboutContent(
+            onBackClick = {
+                navController.popBackStack()
+            }
+        )
+    }
+
+    @Composable
+    fun AboutContent(
         modifier: Modifier = Modifier,
         onBackClick: () -> Unit = {}
     ) {
@@ -72,7 +83,7 @@
     @Composable
     fun AboutPagePreviewLight() {
         CarbonCheckTheme {
-            AboutPage()
+            AboutContent()
         }
     }
 
@@ -84,7 +95,7 @@
     @Composable
     fun AboutPagePreviewDark() {
         CarbonCheckTheme {
-            AboutPage()
+            AboutContent()
         }
     }
 
@@ -96,7 +107,7 @@
     @Composable
     fun AboutPagePreviewLandscapeLight() {
         CarbonCheckTheme {
-            AboutPage()
+            AboutContent()
         }
     }
 
@@ -109,6 +120,6 @@
     @Composable
     fun AboutPagePreviewLandscapeDark() {
         CarbonCheckTheme {
-            AboutPage()
+            AboutContent()
         }
     }
