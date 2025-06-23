@@ -303,7 +303,7 @@ fun FlightActivityForm(
 
             OutlinedTextField(
                 value = departureCode,
-                onValueChange = { if (it.length <= 3) onDepartureChange(it.uppercase()) },
+                onValueChange = { if (it.length <= 3) onDepartureChange(it.lowercase()) },
                 label = { Text("Departure Airport (IATA Code)") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Ascii),
                 singleLine = true,
@@ -314,7 +314,7 @@ fun FlightActivityForm(
 
             OutlinedTextField(
                 value = arrivalCode,
-                onValueChange = { if (it.length <= 3) onArrivalChange(it.uppercase()) },
+                onValueChange = { if (it.length <= 3) onArrivalChange(it.lowercase()) },
                 label = { Text("Arrival Airport (IATA Code)") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Ascii),
                 singleLine = true,

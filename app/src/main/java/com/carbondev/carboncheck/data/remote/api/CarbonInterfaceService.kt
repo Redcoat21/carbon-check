@@ -11,12 +11,12 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface CarbonInterfaceService {
-    @POST
+    @POST("/api/v1/estimates")
     suspend fun getElectricityEstimation(@Body request: NetworkElectricityRequest): ApiResponse<NetworkElectricityAttribute>
 
-    @POST
+    @POST("/api/v1/estimates")
     suspend fun getFlightEstimation(@Body request: NetworkFlightRequest): ApiResponse<NetworkFlightAttribute>
 
-    @POST
+    @POST("/api/v1/estimates")
     suspend fun getShippingEstimation(@Body request: NetworkShippingRequest): ApiResponse<NetworkShippingAttribute>
 }

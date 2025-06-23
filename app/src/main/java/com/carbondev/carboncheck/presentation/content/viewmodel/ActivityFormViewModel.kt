@@ -1,6 +1,9 @@
 package com.carbondev.carboncheck.presentation.content.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.carbondev.carboncheck.data.remote.CarbonInterfaceDataSource
+import com.carbondev.carboncheck.data.remote.model.request.NetworkFlightLeg
+import com.carbondev.carboncheck.data.remote.model.request.NetworkFlightRequest
 import com.carbondev.carboncheck.domain.common.ActivityType
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.Activity
@@ -19,7 +22,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class ActivityFormViewModel @Inject constructor(
-    private val addActivityUseCase: AddActivityUseCase
+    private val addActivityUseCase: AddActivityUseCase,
+    private val carbonInterfaceDataSource: CarbonInterfaceDataSource
 ) : BaseViewModel() {
 
     /**
@@ -70,29 +74,48 @@ class ActivityFormViewModel @Inject constructor(
         viewModelScope.launch {
             setLoading()
             val peopleCount = people.toIntOrNull()
-            if (peopleCount == null) {
+            if (peopleCount == null || peopleCount <= 0) {
                 setError("Invalid number of people.")
                 return@launch
             }
 
-            // Placeholder carbon calculation
-            val estimatedCarbon = CarbonData(gram = 150000.0) // Example: 150kg
+            // Step 1: Build the request for the Carbon Interface API
+            val flightRequest = NetworkFlightRequest(
+                passengers = peopleCount,
+                legs = listOf(
+                    NetworkFlightLeg(
+                        departureAirport = departure,
+                        destinationAirport = destination
+                    )
+                ),
+            )
 
+            // Step 2: Call the new data source to get the estimation
+            val flightAttribute = carbonInterfaceDataSource.getFlightCarbonEstimation(flightRequest)
+
+            if (flightAttribute == null) {
+                setError("Could not calculate carbon emissions. Please try again.")
+                return@launch
+            }
+
+            // Step 3: Create the Activity object with the real carbon data
+            val carbonData = CarbonData(gram = flightAttribute.carbonG.toDouble())
             val newActivity = Activity(
                 id = "",
                 userId = "",
                 type = ActivityType.FLIGHT,
                 datetime = Clock.System.now(),
-                carbon = estimatedCarbon,
+                carbon = carbonData,
                 flightDeparture = departure,
                 flightDestination = destination,
                 people = peopleCount,
-                distance = null,
+                distance = flightAttribute.distanceValue.toInt(),
                 vehicleType = null,
                 foodType = null,
                 weightInGrams = null
             )
 
+            // Step 4: Proceed with the existing save logic
             handleSubmit(newActivity)
         }
     }

@@ -207,7 +207,7 @@ private fun mapActivityTypeToIcon(type: ActivityType): ImageVector {
 // Helper function to create a descriptive title from activity data
 private fun getActivityTitle(activity: Activity): String {
     return when (activity.type) {
-        ActivityType.FLIGHT -> "Flight to ${activity.flightDestination ?: "destination"}"
+        ActivityType.FLIGHT -> "Flight from ${activity.flightDeparture ?: "departure"} to ${activity.flightDestination ?: "destination"}"
         ActivityType.FOOD -> activity.foodType?.replaceFirstChar { it.uppercase() } ?: "Meal"
         ActivityType.TRANSPORT -> activity.vehicleType?.replaceFirstChar { it.uppercase() } ?: "Travel"
         else -> "General Activity"
