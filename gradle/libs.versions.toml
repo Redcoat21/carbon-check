@@ -1,5 +1,8 @@
 [versions]
+accompanistPager = "0.34.0"
+accompanistPagerIndicators = "0.28.0"
 agp = "8.10.1"
+appcompatV7 = "28.0.0"
 bom = "3.1.4"
 coil = "3.2.0"
 datastoreCore = "1.1.7"
@@ -16,6 +19,7 @@ lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
 composeBom = "2025.06.01"
 loggingInterceptor = "4.12.0"
+materialIconsExtended = "1.7.8"
 mockk = "1.14.2"
 moshi = "1.15.2"
 retrofit = "3.0.0"
@@ -31,8 +35,12 @@ ksp = "2.1.21-2.0.1"
 #navigationCompose= "28.9"
 
 [libraries]
+accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
+accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanistPagerIndicators" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastoreCore" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
 auth-kt = { module = "io.github.jan-tennert.supabase:auth-kt" }
 bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "bom" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }

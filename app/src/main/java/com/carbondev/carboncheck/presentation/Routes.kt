@@ -12,4 +12,12 @@ sealed class Routes(val route: String) {
     }
 
     object Home : Routes("home")
+
+    object Add : Routes("add")
+
+    object Settings : Routes("settings")
+
+    object About : Routes("about")
+
+    object ProfileEdit : Routes("profileEdit")
 }

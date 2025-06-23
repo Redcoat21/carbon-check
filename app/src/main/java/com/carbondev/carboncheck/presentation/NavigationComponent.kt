@@ -5,9 +5,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.carbondev.carboncheck.presentation.content.screen.ActivityFormPage
 import com.carbondev.carboncheck.presentation.auth.screen.LoginScreen
 import com.carbondev.carboncheck.presentation.auth.screen.RegisterScreen
 import com.carbondev.carboncheck.presentation.auth.screen.WelcomeScreen
+import com.carbondev.carboncheck.presentation.content.screen.AboutPage
+import com.carbondev.carboncheck.presentation.content.screen.ProfileEditPage
+import com.carbondev.carboncheck.presentation.content.screen.SettingsPage
 import com.carbondev.carboncheck.presentation.navbar.screen.MainScreen
 
 /**
@@ -33,6 +37,22 @@ fun NavigationComponent(startDestination: String = Routes.Auth.Welcome.route) {
 
         composable(Routes.Home.route) {
             MainScreen(navController = navController)
+        }
+
+        composable(Routes.Add.route) {
+            ActivityFormPage(navController = navController)
+        }
+
+        composable(Routes.Settings.route) {
+            SettingsPage(navController = navController)
+        }
+
+        composable(Routes.About.route) {
+            AboutPage(navController = navController)
+        }
+
+        composable(Routes.ProfileEdit.route) {
+            ProfileEditPage(navController = navController)
         }
     }
 }

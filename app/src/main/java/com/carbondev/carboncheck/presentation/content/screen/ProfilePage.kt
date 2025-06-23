@@ -26,7 +26,6 @@ fun ProfilePage() {
 
 @Composable
 fun ProfileScreenContent() {
-    // Dummy user data
     val firstName = "John"
     val lastName = "Doe"
     val email = "johndoe@example.com"

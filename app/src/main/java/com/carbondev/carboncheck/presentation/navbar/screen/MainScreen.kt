@@ -26,6 +26,7 @@ import com.carbondev.carboncheck.presentation.auth.viewmodel.LoginViewModel
 import com.carbondev.carboncheck.presentation.content.screen.HomePage
 import com.carbondev.carboncheck.presentation.content.screen.ProfilePage
 import com.carbondev.carboncheck.presentation.content.screen.SettingsPage
+import com.carbondev.carboncheck.presentation.content.screen.SettingsPageContent
 import com.carbondev.carboncheck.presentation.content.screen.StatsPage
 import com.carbondev.carboncheck.presentation.content.screen.VoucherPage
 import com.carbondev.carboncheck.presentation.navbar.NavItem
@@ -80,17 +81,25 @@ fun MainScreen(
             }
         },
     ) { innerPadding ->
-        ContentScreen(modifier = Modifier.padding(innerPadding), selectedIndex)
+        ContentScreen(
+            modifier = Modifier.padding(innerPadding),
+            selectedIndex = selectedIndex,
+            navController = navController // now passed correctly
+        )
     }
 }
 
 @Composable
-fun ContentScreen(modifier: Modifier = Modifier, selectedIndex: Int) {
+fun ContentScreen(
+    modifier: Modifier = Modifier,
+    selectedIndex: Int,
+    navController: NavHostController
+) {
     when(selectedIndex){
-        0 -> HomePage()
+        0 -> HomePage(navController = navController, modifier = modifier)
         1 -> StatsPage()
         2 -> ProfilePage()
         3 -> VoucherPage()
-        4 -> SettingsPage()
+        4 -> SettingsPage(navController = navController)
     }
 }
