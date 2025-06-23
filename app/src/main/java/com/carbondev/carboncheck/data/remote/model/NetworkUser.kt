@@ -50,7 +50,7 @@ data class NetworkUser(
             lastName = lastName,
             avatarUrl = avatarUrl ?: "",
             email = email,
-            points = points
+            points = points,
             createdAt = createdAt
         )
     }

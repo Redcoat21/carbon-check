@@ -13,7 +13,7 @@ data class UserEntity(
     val lastName: String,
     val avatarUrl: String,
     val points: Int,
-    val email: String
+    val email: String,
     val createdAt: Long
 )
 
@@ -24,7 +24,7 @@ fun UserEntity.toDomainModel(): User {
         lastName = lastName,
         avatarUrl = avatarUrl,
         points = points,
-        email = email
+        email = email,
         createdAt = Instant.fromEpochMilliseconds(createdAt)
     )
 }
@@ -36,7 +36,7 @@ fun User.toEntity(): UserEntity {
         lastName = lastName,
         avatarUrl = avatarUrl,
         points = points,
-        email = email
+        email = email,
         createdAt = createdAt.toEpochMilliseconds()
     )
 }
