@@ -40,15 +40,15 @@ fun HomePage(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
-)   {
+) {
     // just a dummy
-    val sampleActivities = listOf(
-        Activity(Icons.Default.Home, "Car ride", "8:00 pm • 20 minutes", 6f),
-        Activity(Icons.Default.Home, "Walk", "5:30 pm • 15 minutes", 0f),
-        Activity(Icons.Default.Home, "Car ride", "12:00 pm • 10 minutes", 4f),
-        Activity(Icons.Default.Home, "Bike ride", "9:00 am • 30 minutes", 1.2f),
-        Activity(Icons.Default.Home, "Flight", "6:00 am • 2 hours", 150f)
-    )
+//    val sampleActivities = listOf(
+//        Activity(Icons.Default.Home, "Car ride", "8:00 pm • 20 minutes", 6f),
+//        Activity(Icons.Default.Home, "Walk", "5:30 pm • 15 minutes", 0f),
+//        Activity(Icons.Default.Home, "Car ride", "12:00 pm • 10 minutes", 4f),
+//        Activity(Icons.Default.Home, "Bike ride", "9:00 am • 30 minutes", 1.2f),
+//        Activity(Icons.Default.Home, "Flight", "6:00 am • 2 hours", 150f)
+//    )
 
     // Collect the entire UI state from the ViewModel
     val uiState by viewModel.uiState.collectAsState()
@@ -81,9 +81,47 @@ fun HomePage(
                 Spacer(modifier = Modifier.height(16.dp))
 
 //        WeeklyProgressHeader(modifier = Modifier.weight(1f))
-        RecentActivitiesList(
-            activities = uiState.recentActivities,
-            onAddClick = { navController.navigate(Routes.Add.route) }
+                RecentActivitiesList(
+                    activities = uiState.recentActivities,
+                    onAddClick = { navController.navigate(Routes.Add.route) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun Welcoming(
+    modifier: Modifier = Modifier,
+    userName: String
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Text(
+                    text = "Hi $userName,",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "Track Your Carbon Footprint!",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Image(
+                painter = painterResource(id = R.drawable.eco),
+                contentDescription = "App Logo",
+                modifier = Modifier.size(64.dp),
+                contentScale = ContentScale.Inside
             )
         }
     }
@@ -138,46 +176,6 @@ fun TodayImpactCard(
 }
 
 @Composable
-fun Welcoming(
-    modifier: Modifier = Modifier,
-    userName: String
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                Text(
-                    text = "Hi $userName,",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = "Track Your Carbon Footprint!",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-            Image(
-                painter = painterResource(id = R.drawable.eco),
-                contentDescription = "App Logo",
-                modifier = Modifier.size(64.dp),
-                contentScale = ContentScale.Inside
-            )
-        }
-    }
-}
-
-// NOTE: The Activity data class is now imported from the ViewModel file.
-// The local definition has been removed.
-
-@Composable
 fun ActivityRow(item: Activity, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
@@ -230,10 +228,14 @@ fun RecentActivitiesList(
     }
 }
 
+// NOTE: The Activity data class is now imported from the ViewModel file.
+// The local definition has been removed.
+
+
 //================ PREVIEWS ================
 
 // Helper function to create CarbonData for previews
-private fun createPreviewCarbonData(kg: Double) = CarbonData(kg * 1000, kg, kg * 2.20462, kg / 1000)
+fun createPreviewCarbonData(kg: Double) = CarbonData(kg * 1000, kg, kg * 2.20462, kg / 1000)
 
 // Updated preview state to use the new data structures
 val previewState = HomeUiState(
@@ -241,9 +243,24 @@ val previewState = HomeUiState(
     todaysCo2 = createPreviewCarbonData(4.2),
     dailyTarget = 5.6f,
     recentActivities = listOf(
-        Activity(Icons.Default.Home, "Car ride", "8:00 pm • 20 minutes", createPreviewCarbonData(6.0)),
-        Activity(Icons.Default.Home, "Walk", "5:30 pm • 15 minutes", createPreviewCarbonData(0.0)),
-        Activity(Icons.Default.Home, "Car ride", "12:00 pm • 10 minutes", createPreviewCarbonData(4.0))
+        Activity(
+            Icons.Default.Home,
+            "Car ride",
+            "8:00 pm • 20 minutes",
+            createPreviewCarbonData(6.0)
+        ),
+        Activity(
+            Icons.Default.Home,
+            "Walk",
+            "5:30 pm • 15 minutes",
+            createPreviewCarbonData(0.0)
+        ),
+        Activity(
+            Icons.Default.Home,
+            "Car ride",
+            "12:00 pm • 10 minutes",
+            createPreviewCarbonData(4.0)
+        )
     ),
     isLoading = false
 )
@@ -267,13 +284,20 @@ fun HomePagePreviewLight() {
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                RecentActivitiesList(activities = previewState.recentActivities)
+                RecentActivitiesList(
+                    activities = previewState.recentActivities,
+                    onAddClick = { }
+                )
             }
         }
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "HomePage Preview Dark")
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
+    name = "HomePage Preview Dark"
+)
 @Composable
 fun HomePagePreviewDark() {
     MaterialTheme(colorScheme = darkColorScheme()) { // Assuming you have a darkColorScheme
@@ -292,7 +316,10 @@ fun HomePagePreviewDark() {
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                RecentActivitiesList(activities = previewState.recentActivities)
+                RecentActivitiesList(
+                    activities = previewState.recentActivities,
+                    onAddClick = { }
+                )
             }
         }
     }
