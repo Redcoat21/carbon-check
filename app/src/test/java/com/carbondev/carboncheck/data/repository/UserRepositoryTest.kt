@@ -1,5 +1,6 @@
 package com.carbondev.carboncheck.data.repository
 
+import com.carbondev.carboncheck.data.local.datasource.UserLocalDataSource
 import com.carbondev.carboncheck.data.remote.model.NetworkUser
 import com.carbondev.carboncheck.data.remote.supabase.UserRemoteDataSource
 import com.carbondev.carboncheck.domain.common.ErrorType
@@ -19,6 +20,7 @@ import org.junit.Test
 
 class UserRepositoryTest {
     @MockK private lateinit var mockRemoteDataSource: UserRemoteDataSource
+    @MockK private lateinit var mockLocalDataSource: UserLocalDataSource
     private lateinit var mockErrorHandler: ErrorHandler
     private lateinit var userRepository: UserRepositoryRemoteImplementation
 
@@ -26,7 +28,7 @@ class UserRepositoryTest {
     fun setUp() {
         MockKAnnotations.init(this)
         mockErrorHandler = mockk(relaxed = true)
-        userRepository = UserRepositoryRemoteImplementation(mockRemoteDataSource, mockErrorHandler)
+        userRepository = UserRepositoryRemoteImplementation(mockRemoteDataSource, mockLocalDataSource, mockErrorHandler)
     }
 
     @Test
