@@ -121,5 +121,10 @@ dependencies {
 
 //    custom icon
     implementation(libs.androidx.material.icons.extended)
+
+//    swipeable tab
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+
 }
 
