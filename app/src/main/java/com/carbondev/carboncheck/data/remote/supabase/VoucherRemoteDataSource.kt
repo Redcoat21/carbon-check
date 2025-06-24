@@ -9,7 +9,9 @@ import javax.inject.Inject
 
 class VoucherRemoteDataSource @Inject constructor(private val client: SupabaseClient) {
     suspend fun getVouchersByVendor(vendorId: String): List<NetworkVoucher> {
-        val columns = Columns.list(NetworkVoucher.Columns.ALL)
+        val columns = Columns.raw("""
+            *, vendor(*)
+        """.trimIndent())
         val req = client.from(NetworkVoucher.TABLE_NAME).select(columns = columns) {
             filter {
                 eq(NetworkVoucher.Columns.VENDOR_ID, vendorId)
@@ -36,14 +38,22 @@ class VoucherRemoteDataSource @Inject constructor(private val client: SupabaseCl
     }
 
     suspend fun getVouchers(): List<NetworkVoucher> {
-        val columns = Columns.list(NetworkVoucher.Columns.ALL)
+        val columns = Columns.raw(
+            """
+            *, vendor(*)
+        """.trimIndent()
+        )
         val req = client.from(NetworkVoucher.TABLE_NAME).select(columns = columns)
         val res = req.decodeList<NetworkVoucher>()
         return res
     }
 
     suspend fun getVoucher(id: String): NetworkVoucher {
-        val columns = Columns.list(NetworkVoucher.Columns.ALL)
+        val columns = Columns.raw(
+            """
+            *, vendor(*)
+        """.trimIndent()
+        )
         val req = client.from(NetworkVoucher.TABLE_NAME).select(columns = columns) {
             filter {
                 eq(NetworkVoucher.Columns.ID, id)
