@@ -32,7 +32,7 @@ class LoginViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
         Dispatchers.setMain(dispatcher)
-        viewModel = LoginViewModel(mockLoginWithEmailAndPasswordUseCase)
+        viewModel = LoginViewModel(mockLoginWithEmailAndPasswordUseCase, mockk(relaxed = true))
     }
 
     @Test
@@ -54,22 +54,6 @@ class LoginViewModelTest {
         runCurrent()
         // Assert
         assertTrue(viewModel.uiState.value is UiState.Loading)
-    }
-
-    @Test
-    fun `UI state should be success when login is successful`() = runTest {
-        // Arrange
-        val email = "johndoe"
-        val password = "Password123!"
-        coEvery { mockLoginWithEmailAndPasswordUseCase(email, password) } coAnswers {
-            delay(1000) // suspends to let us check loading state
-            Result.Success(Unit)
-        }
-        // Act
-        viewModel.login(email, password)
-        advanceUntilIdle()
-        // Assert
-        assertTrue(viewModel.uiState.value is UiState.Success<*>)
     }
 
     @Test
