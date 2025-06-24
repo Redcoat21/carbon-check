@@ -5,4 +5,5 @@ import javax.inject.Inject
 
 class GetVouchersUseCase @Inject constructor(private val voucherRepository: VoucherRepository) {
     suspend operator fun invoke() = voucherRepository.getVouchers()
+//    TODO: fixing the vendor parsing problem
 }

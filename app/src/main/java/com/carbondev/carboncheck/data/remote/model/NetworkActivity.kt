@@ -9,7 +9,7 @@ import kotlinx.datetime.Instant
 
 @JsonClass(generateAdapter = true)
 data class NetworkActivity(
-    @Json(name = "activity_id") val activityId: String,
+    @Json(name = "activity_id") val activityId: String? = null,
     @Json(name = "user_id") val userId: String,
     val type: ActivityType,
     val datetime: Instant,
@@ -71,7 +71,7 @@ data class NetworkActivity(
         )
 
         return Activity(
-            id = activityId,
+            id = activityId ?: "",
             userId = userId,
             type = type,
             datetime = datetime,

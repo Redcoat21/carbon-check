@@ -145,7 +145,7 @@ object NetworkModule {
     @Named("carbon_interface")
     fun provideCarbonInterfaceRetrofit(client: OkHttpClient, moshi: Moshi): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://www.carboninterface.com/api/v1/")
+            .baseUrl("https://www.carboninterface.com/")
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
