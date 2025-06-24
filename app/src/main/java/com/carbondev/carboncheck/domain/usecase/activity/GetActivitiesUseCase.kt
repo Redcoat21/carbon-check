@@ -18,7 +18,7 @@ class GetActivitiesUseCase @Inject constructor(
      * Invokes the use case.
      * @return A [Flow] that emits a list of [Activity] objects.
      */
-    operator fun invoke(): Flow<List<Activity>> {
+    suspend operator fun invoke(): Flow<List<Activity>> {
         // Simply return the flow from the repository. The repository, as the
         // single source of truth, handles providing the cached data stream.
         return repository.getActivities()
