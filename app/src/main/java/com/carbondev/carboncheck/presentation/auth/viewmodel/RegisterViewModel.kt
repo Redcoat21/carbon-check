@@ -18,8 +18,6 @@ class RegisterViewModel @Inject constructor(
         email: String,
         password: String,
         confirmPassword: String,
-        firstName: String,
-        lastName: String
     ) = viewModelScope.launch {
         setLoading()
 
@@ -27,9 +25,7 @@ class RegisterViewModel @Inject constructor(
             registerWithEmailAndPasswordUseCase(
                 email = email,
                 password = password,
-                confirmPassword = confirmPassword,
-                firstName = firstName,
-                lastName = lastName
+                confirmPassword = confirmPassword
             )) {
             is Result.Success -> {
                 setSuccess(result.data)

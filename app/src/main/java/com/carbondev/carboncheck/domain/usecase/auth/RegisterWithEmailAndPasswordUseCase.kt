@@ -29,8 +29,6 @@ class RegisterWithEmailAndPasswordUseCase @Inject constructor(
         email: String,
         password: String,
         confirmPassword: String,
-        firstName: String,
-        lastName: String
     ): Result<Unit> {
         if (email.isBlank()) {
             val exception = IllegalArgumentException("Email cannot be blank")
@@ -56,24 +54,6 @@ class RegisterWithEmailAndPasswordUseCase @Inject constructor(
                 exception = exception,
                 type = errorHandler.mapToDomainError(exception),
                 message = "Confirm Password cannot be blank"
-            )
-        }
-        if (firstName.isBlank()) {
-            val exception =
-                IllegalArgumentException("First Name cannot be blank")
-            return Result.Error(
-                exception = exception,
-                type = errorHandler.mapToDomainError(exception),
-                message = "First Name cannot be blank"
-            )
-        }
-        if (lastName.isBlank()) {
-            val exception =
-                IllegalArgumentException("Last Name cannot be blank")
-            return Result.Error(
-                exception = exception,
-                type = errorHandler.mapToDomainError(exception),
-                message = "Last Name cannot be blank"
             )
         }
         val validationResult = validator.validate(Params(email, password, confirmPassword))

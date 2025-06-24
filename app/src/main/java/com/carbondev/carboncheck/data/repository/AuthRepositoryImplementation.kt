@@ -17,7 +17,10 @@ class AuthRepositoryImplementation @Inject constructor(
         return runCatching {
             val user = remote.loginWithEmailAndPassword(email = email, password = password)
             Timber.tag("Auth").d("User: $user")
-            if (user != null) local.saveUser(user)
+            if (user != null) {
+                local.deleteUser()
+                local.saveUser(user)
+            }
         }.fold(onSuccess = {
             Result.Success(Unit)
         }, onFailure = {

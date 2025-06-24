@@ -61,13 +61,11 @@ fun RegisterScreen(
             }
         }) {
         RegisterScreenContent(
-            onRegisterClicked = { email, password, confirmPassword, firstName, lastName ->
+            onRegisterClicked = { email, password, confirmPassword ->
                 viewModel.register(
                     email = email,
                     password = password,
-                    confirmPassword = confirmPassword,
-                    firstName = firstName,
-                    lastName = lastName
+                    confirmPassword = confirmPassword
                 )
                 navController.navigate(Routes.Auth.Login.route)
             },
@@ -80,11 +78,9 @@ fun RegisterScreen(
 
 @Composable
 fun RegisterScreenContent(
-    onRegisterClicked: (String, String, String, String, String) -> Unit, // Updated signature
+    onRegisterClicked: (String, String, String) -> Unit, // Updated signature
     onSignInClicked: () -> Unit
 ) {
-    var firstName by rememberSaveable { mutableStateOf("") }
-    var lastName by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
@@ -137,15 +133,6 @@ fun RegisterScreenContent(
             modifier = Modifier.fillMaxWidth(0.7f),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            // Replaced fullName field with firstName and lastName
-            StringTextField(
-                label = "First Name",
-                value = firstName,
-                onValueChange = { firstName = it })
-            StringTextField(
-                label = "Last Name",
-                value = lastName,
-                onValueChange = { lastName = it })
             StringTextField(label = "Email", value = email, onValueChange = { email = it })
             PasswordTextField(
                 label = "Password",
@@ -165,9 +152,7 @@ fun RegisterScreenContent(
                             email,
                             password,
                             confirmPassword,
-                            firstName,
-                            lastName
-                        ) // Updated call
+                        )
                     }
                 )
             )
@@ -177,7 +162,7 @@ fun RegisterScreenContent(
 
         // Register Button
         Button(
-            onClick = { onRegisterClicked(email, password, confirmPassword, firstName, lastName) },
+            onClick = { onRegisterClicked(email, password, confirmPassword) },
             modifier = Modifier
                 .fillMaxWidth(0.7f)
                 .height(48.dp),
@@ -221,7 +206,7 @@ fun RegisterScreenContent(
 fun RegisterScreenComposeDarkModePreview() {
     CarbonCheckTheme {
         // Updated preview call
-        RegisterScreenContent(onRegisterClicked = { _, _, _, _, _ -> }, onSignInClicked = {})
+        RegisterScreenContent(onRegisterClicked = { _, _, _ -> }, onSignInClicked = {})
     }
 }
 
@@ -230,7 +215,7 @@ fun RegisterScreenComposeDarkModePreview() {
 fun RegisterScreenComposeLightModePreview() {
     CarbonCheckTheme {
         // Updated preview call
-        RegisterScreenContent(onRegisterClicked = { _, _, _, _, _ -> }, onSignInClicked = {})
+        RegisterScreenContent(onRegisterClicked = { _, _, _ -> }, onSignInClicked = {})
     }
 }
 
@@ -244,7 +229,7 @@ fun RegisterScreenComposeLightModePreview() {
 fun RegisterScreenComposeDarkModeLandscapePreview() {
     CarbonCheckTheme {
         // Updated preview call
-        RegisterScreenContent(onRegisterClicked = { _, _, _, _, _ -> }, onSignInClicked = {})
+        RegisterScreenContent(onRegisterClicked = { _, _, _ -> }, onSignInClicked = {})
     }
 }
 
@@ -257,6 +242,6 @@ fun RegisterScreenComposeDarkModeLandscapePreview() {
 fun RegisterScreenComposeLightModeLandscapePreview() {
     CarbonCheckTheme {
         // Updated preview call
-        RegisterScreenContent(onRegisterClicked = { _, _, _, _, _ -> }, onSignInClicked = {})
+        RegisterScreenContent(onRegisterClicked = { _, _, _ -> }, onSignInClicked = {})
     }
 }

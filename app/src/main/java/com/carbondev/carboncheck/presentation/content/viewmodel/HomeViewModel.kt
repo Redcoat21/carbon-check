@@ -62,7 +62,7 @@ class HomeViewModel @Inject constructor(
             combine(activitiesFlow, todaysCarbonTotalFlow) { activities, todaysTotal ->
                 // This block will be re-executed whenever activities or their total changes.
                 HomeUiState(
-                    userName = user.name,
+                    userName = (if (user.name == "") { "Guest" } else { user.name }).toString(),
                     todaysCo2 = todaysTotal,
                     recentActivities = activities
                 )
