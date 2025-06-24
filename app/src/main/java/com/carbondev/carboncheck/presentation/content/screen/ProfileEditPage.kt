@@ -17,27 +17,50 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.carbondev.carboncheck.R
 import com.carbondev.carboncheck.presentation.Routes
+import com.carbondev.carboncheck.presentation.common.UiState
+import com.carbondev.carboncheck.presentation.content.viewmodel.ProfileEditUiState
+import com.carbondev.carboncheck.presentation.content.viewmodel.ProfileEditViewModel
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
 import com.carbondev.carboncheck.presentation.ui.theme.Typography
 
 @Composable
 fun ProfileEditPage(navController: NavHostController) {
+    val viewModel: ProfileEditViewModel = hiltViewModel()
+
     ProfileEditContent(
+        viewModel = viewModel,
         onBackClick = {
             navController.popBackStack()
         }
     )
 }
-
 @Composable
-fun ProfileEditContent(modifier: Modifier = Modifier, onBackClick: () -> Unit = {}) {
-    var firstName by remember { mutableStateOf(TextFieldValue("John")) }
-    var lastName by remember { mutableStateOf(TextFieldValue("Doe")) }
-    var avatarUrl by remember { mutableStateOf(TextFieldValue("https://i.pravatar.cc/150?img=5")) }
+fun ProfileEditContent(
+    viewModel: ProfileEditViewModel,
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {}
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    val isLoading = uiState is UiState.Loading
+    val errorMessage = (uiState as? UiState.Error)?.message
+
+    val profileState = (uiState as? UiState.Success<*>)?.data as? ProfileEditUiState
+
+    var firstName by remember(profileState?.firstName) {
+        mutableStateOf(TextFieldValue(profileState?.firstName ?: ""))
+    }
+    var lastName by remember(profileState?.lastName) {
+        mutableStateOf(TextFieldValue(profileState?.lastName ?: ""))
+    }
+    var avatarUrl by remember(profileState?.avatarUrl) {
+        mutableStateOf(TextFieldValue(profileState?.avatarUrl ?: ""))
+    }
 
     Column(
         modifier = Modifier
@@ -118,13 +141,30 @@ fun ProfileEditContent(modifier: Modifier = Modifier, onBackClick: () -> Unit = 
                         .testTag("AvatarUrlInput")
                 )
 
+                if (errorMessage != null) {
+                    Text(
+                        text = errorMessage ?: "",
+                        color = MaterialTheme.colorScheme.error,
+                        style = Typography.bodySmall
+                    )
+                }
+
+                if (isLoading) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+
                 Button(
                     onClick = {
-                        println("Save clicked: $firstName $lastName $avatarUrl")
+                        viewModel.updateUser(
+                            firstName.text,
+                            lastName.text,
+                            avatarUrl.text
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag("SaveButton")
+                        .testTag("SaveButton"),
+                    enabled = !isLoading
                 ) {
                     Text("Save Changes")
                 }
@@ -136,7 +176,9 @@ fun ProfileEditContent(modifier: Modifier = Modifier, onBackClick: () -> Unit = 
 @Composable
 fun ProfileEditLightPreview() {
     CarbonCheckTheme {
-        ProfileEditContent()
+        ProfileEditContent(
+            viewModel = hiltViewModel()
+        )
     }
 }
 
@@ -144,7 +186,9 @@ fun ProfileEditLightPreview() {
 @Composable
 fun ProfileEditDarkPreview() {
     CarbonCheckTheme {
-        ProfileEditContent()
+        ProfileEditContent(
+            viewModel = hiltViewModel()
+        )
     }
 }
 
@@ -156,7 +200,9 @@ fun ProfileEditDarkPreview() {
 @Composable
 fun ProfileEditLandscapeLightPreview() {
     CarbonCheckTheme {
-        ProfileEditContent()
+        ProfileEditContent(
+            viewModel = hiltViewModel()
+        )
     }
 }
 
@@ -169,6 +215,8 @@ fun ProfileEditLandscapeLightPreview() {
 @Composable
 fun ProfileEditLandscapeDarkPreview() {
     CarbonCheckTheme {
-        ProfileEditContent()
+        ProfileEditContent(
+            viewModel = hiltViewModel()
+        )
     }
 }
