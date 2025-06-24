@@ -20,4 +20,8 @@ sealed class Routes(val route: String) {
     object About : Routes("about")
 
     object ProfileEdit : Routes("profileEdit")
+
+    object  Edit : Routes("edit/{userId}"){
+        fun createRoute(userId: String) = "edit/$userId"
+    }
 }

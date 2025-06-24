@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.carbondev.carboncheck.R
 import com.carbondev.carboncheck.domain.common.ActivityType
 import com.carbondev.carboncheck.domain.model.Activity
@@ -56,7 +57,8 @@ fun HomePage(
                 if (homeData != null) {
                     HomePageContent(
                         homeData = homeData,
-                        onAddClick = { navController.navigate(Routes.Add.route) }
+                        onAddClick = { navController.navigate(Routes.Add.route) },
+                        navController = navController
                     )
                 } else {
                     ErrorText("An unexpected error occurred.")
@@ -72,7 +74,8 @@ fun HomePage(
 private fun HomePageContent(
     homeData: HomeUiState,
     onAddClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
     Column(
         modifier = modifier
@@ -90,7 +93,8 @@ private fun HomePageContent(
         Spacer(modifier = Modifier.height(16.dp))
         RecentActivitiesList(
             activities = homeData.recentActivities,
-            onAddClick = onAddClick
+            onAddClick = onAddClick,
+            navController = navController
         )
     }
 }
@@ -214,6 +218,10 @@ private fun getActivityTitle(activity: Activity): String {
     }
 }
 
+private fun getActivityID(activity: Activity): String {
+    return activity.id
+}
+
 // Helper function to format the Instant into a human-readable string
 private fun formatActivityDateTime(instant: Instant): String {
     val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
@@ -222,7 +230,7 @@ private fun formatActivityDateTime(instant: Instant): String {
 }
 
 @Composable
-fun ActivityRow(item: Activity, modifier: Modifier = Modifier) {
+fun ActivityRow(item: Activity, modifier: Modifier = Modifier, onEditClick: () -> Unit) {
     val icon = mapActivityTypeToIcon(item.type)
     val title = getActivityTitle(item)
     val formattedTime = formatActivityDateTime(item.datetime)
@@ -233,6 +241,7 @@ fun ActivityRow(item: Activity, modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         Icon(icon, contentDescription = title, modifier = Modifier.size(32.dp), tint = MaterialTheme.colorScheme.primary)
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
@@ -240,13 +249,17 @@ fun ActivityRow(item: Activity, modifier: Modifier = Modifier) {
             Text(text = formattedTime, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Text(text = "%.1f kg CO₂".format(item.carbon.kilogram), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
+        IconButton(onClick = onEditClick) {
+            Icon(imageVector = Icons.Default.Edit, contentDescription = "Add Activity", tint = MaterialTheme.colorScheme.primary)
+        }
     }
 }
 
 @Composable
 fun RecentActivitiesList(
     activities: List<Activity>,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    navController: NavHostController
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -267,7 +280,11 @@ fun RecentActivitiesList(
             }
         }
         items(activities) { activity ->
-            ActivityRow(activity)
+//            TODO: kerjainnya disini
+            ActivityRow(activity, onEditClick = {
+                val userId = activity.userId
+                navController.navigate(Routes.Edit.createRoute(userId))
+            })
         }
     }
 }
@@ -300,7 +317,8 @@ fun HomePagePreviewLight() {
         Surface {
             HomePageContent(
                 homeData = previewState,
-                onAddClick = {} // Pass an empty lambda for the preview
+                onAddClick = {},
+                navController = rememberNavController()
             )
         }
     }

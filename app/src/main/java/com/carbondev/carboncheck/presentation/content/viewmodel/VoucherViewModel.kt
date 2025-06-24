@@ -6,6 +6,7 @@ import com.carbondev.carboncheck.domain.usecase.voucher.GetVouchersUseCase
 import com.carbondev.carboncheck.presentation.common.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel

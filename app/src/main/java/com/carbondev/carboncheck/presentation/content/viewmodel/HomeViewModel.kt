@@ -1,5 +1,6 @@
 package com.carbondev.carboncheck.presentation.content.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.carbondev.carboncheck.domain.common.Result
 import com.carbondev.carboncheck.domain.model.Activity
@@ -24,6 +25,7 @@ data class HomeUiState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+//    savedStateHandle: SavedStateHandle
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getActivitiesUseCase: GetActivitiesUseCase,
     private val getTodaysCarbonTotalUseCase: GetTodaysCarbonTotalUseCase,
