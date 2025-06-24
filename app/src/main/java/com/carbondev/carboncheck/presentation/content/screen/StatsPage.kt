@@ -19,6 +19,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,35 +28,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import co.yml.charts.common.model.PlotType
 import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
+import com.carbondev.carboncheck.domain.model.toPieSlices
+import com.carbondev.carboncheck.presentation.content.viewmodel.StatsViewModel
 
 @Composable
 fun StatsPage(
     modifier: Modifier = Modifier,
-    totalCarbon: Int = 100,
+    viewModel: StatsViewModel = hiltViewModel()
 ) {
-    val scrollState = rememberScrollState()
-
-    val weeklySlices = listOf(
-        PieChartData.Slice("Transport", 40f, Color(0xFF66BB6A)),
-        PieChartData.Slice("Energy", 50f, Color(0xFFEF5350)),
-        PieChartData.Slice("Waste", 20f, Color(0xFF42A5F5))
-    )
-
-    val monthlySlices = listOf(
-        PieChartData.Slice("Transport", 150.2f, Color(0xFF66BB6A)),
-        PieChartData.Slice("Energy", 120f, Color(0xFFEF5350)),
-        PieChartData.Slice("Waste", 54f, Color(0xFF42A5F5))
-    )
-
-    val yearlySlices = listOf(
-        PieChartData.Slice("Transport", 314.8f, Color(0xFF66BB6A)),
-        PieChartData.Slice("Energy", 302.1f, Color(0xFFEF5350)),
-        PieChartData.Slice("Waste", 117.5f, Color(0xFF42A5F5))
-    )
+    val weekly by viewModel.weeklyStats.collectAsState()
+    val monthly by viewModel.monthlyStats.collectAsState()
+    val yearly by viewModel.yearlyStats.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -63,18 +52,10 @@ fun StatsPage(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item {
-            OurPieChart("weekly", weeklySlices)
-        }
-        item {
-            OurPieChart("monthly", monthlySlices)
-        }
-        item {
-            OurPieChart("yearly", yearlySlices)
-        }
-        item {
-            Spacer(Modifier.height(100.dp))
-        }
+        item { OurPieChart("weekly", weekly.toPieSlices()) }
+        item { OurPieChart("monthly", monthly.toPieSlices()) }
+        item { OurPieChart("yearly", yearly.toPieSlices()) }
+        item { Spacer(Modifier.height(100.dp)) }
     }
 }
 
@@ -111,24 +92,6 @@ fun OurPieChart(
 
     Spacer(Modifier.height(16.dp))
     LegendRow(slices)
-}
-
-@Composable
-fun Legend(slices: List<PieChartData.Slice>) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        slices.forEach { slice ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(12.dp)
-                        .clip(CircleShape)
-                        .background(slice.color)
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(text = slice.label, style = MaterialTheme.typography.bodyMedium)
-            }
-        }
-    }
 }
 
 @Composable
