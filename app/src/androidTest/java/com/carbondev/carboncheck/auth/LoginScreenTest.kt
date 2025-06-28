@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import com.carbondev.carboncheck.presentation.auth.screen.LoginScreenContent
 import com.carbondev.carboncheck.presentation.ui.theme.CarbonCheckTheme
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -56,5 +57,54 @@ class LoginScreenTest {
             .performClick()
 
         assertTrue("Sign up callback should be called", signUpCalled)
+    }
+
+    @Test
+    fun loginScreenFailed() {
+        var signInCalled = false
+        var signUpCalled = false
+        var capturedEmail = ""
+        var capturedPassword = ""
+
+        composeTestRule.setContent {
+            CarbonCheckTheme {
+                LoginScreenContent(
+                    onSignInClicked = { email, password ->
+                        signInCalled = true
+                        capturedEmail = email
+                        capturedPassword = password
+                    },
+                    onSignUpClicked = {
+                        signUpCalled = true
+                    }
+                )
+            }
+        }
+
+//        val email = ""
+//        val password = ""
+//
+//        composeTestRule.onAllNodes(hasSetTextAction())[0]
+//            .performTextInput(email)
+//
+//        composeTestRule.onAllNodes(hasSetTextAction())[1]
+//            .performTextInput(password)
+
+//        Thread.sleep(1000)
+
+        composeTestRule.onNodeWithText("Sign In")
+            .performClick()
+
+//        Thread.sleep(500)
+
+//        composeTestRule.onNodeWithText("Sign up")
+//            .performClick()
+        assertTrue("Sign in callback should be called", signInCalled)
+        assertEquals("", capturedEmail)
+        assertEquals("", capturedPassword)
+//        composeTestRule.waitUntil(timeoutMillis = 5000) {
+//                composeTestRule.onAllNodesWithText("Email or password cannot be blank").fetchSemanticsNodes().isNotEmpty()
+//            }
+        composeTestRule.onNodeWithText("Sign In").assertIsDisplayed()
     }
 }
